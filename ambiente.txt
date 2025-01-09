@@ -1,0 +1,38 @@
+Instalar Python e Gerenciador de Pacotes
+
+- sudo apt update
+- sudo apt install python3 python3-pip -y
+
+Instalar Chrome
+
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
+
+
+Instalar chromedriver
+
+sudo apt install -y chromium-driver
+
+Instalar outras dependencias:
+
+sudo apt install libxi6 libgconf-2-4 libxss1 libappindicator1 libindicator7 -y
+sudo apt install fonts-liberation libasound2 libnspr4 libnss3 xdg-utils unzip -y
+
+Dependencias do python: 
+
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install selenium webdriver-manager axe-selenium-python googletrans pandas
+pip install requests openpyxl
+
+
+Alterar Configurações (se necessário)
+Caminho do Chrome: Pode ser necessário especificar o caminho do Chrome: chrome_options.binary_location = "/usr/bin/google-chrome"
+
+Gerenciador de WebDriver: O webdriver_manager deve funcionar sem mudanças, mas se quiser configurar manualmente: driver = webdriver.Chrome(executable_path='/usr/bin/chromedriver')
+
+
+Permissões e Execução: chmod +x /usr/bin/chromedriver
+
+Execução: python3 main.py
