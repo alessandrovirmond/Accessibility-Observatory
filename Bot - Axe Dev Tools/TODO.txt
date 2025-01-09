@@ -1,0 +1,29 @@
+- ver uso da api do axe devtools 
+- tentar encontrar lib mais atualizada. axe 4.1 
+- integrar com mongodb 
+- fazer metrica de testes 
+- pensar em como vamos apresentar esses dados. (ranking por municipios. dentro do municipio, 
+um ranking indo da pior p melhor pagina. ao clicar, sera exibido um relatorio daquela pagina,
+exibindo as violacoes e mostrando como corrigir e quais elementos estão sendo afetados ao clicar em 
+cada uma delas)
+
+- mostrar um desenho de telas de como sera exibido. (proximo encontro)
+
+vir com metrica e esqueleto de como será o relatorio. 
+
+
+
+
+07/11 - 
+- Trocar subdominio do json por url - feito 
+
+- tentar encontrar lib com axe mais atualizado. Na vdd, essa lib ta usando o 4.0.1. O pip 
+show axe-selenium-python nos mostra um link do github, q leva pra pagina dessa lib. - feito 
+
+- alterei subdominios pra URL no json e na tabela 
+- criei uma coluna pra data do teste do axe 
+- fiz o preenchimento das colunas das datas
+
+- vou criar uma conta no mongodb atlas essa semana e ja jogar pra la. 
+
+  

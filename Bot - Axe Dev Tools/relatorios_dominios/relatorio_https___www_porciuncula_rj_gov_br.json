@@ -1,0 +1,463 @@
+{
+    "titulo": "Relatório de Acessibilidade",
+    "subdominios": [
+        {
+            "url": "https://site.porciuncula.rj.gov.br/noticias/2655",
+            "total_elementos_testados": 24,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/pontos-turisticos/5",
+            "total_elementos_testados": 43,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one contentinfo landmark",
+                    "regra_violada": "landmark-no-duplicate-contentinfo",
+                    "como_corrigir": "Page must not have more than one contentinfo landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-contentinfo?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Page has more than one contentinfo landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/noticias/2653",
+            "total_elementos_testados": 43,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one contentinfo landmark",
+                    "regra_violada": "landmark-no-duplicate-contentinfo",
+                    "como_corrigir": "Page must not have more than one contentinfo landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-contentinfo?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Page has more than one contentinfo landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/noticias/2654",
+            "total_elementos_testados": 43,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one contentinfo landmark",
+                    "regra_violada": "landmark-no-duplicate-contentinfo",
+                    "como_corrigir": "Page must not have more than one contentinfo landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-contentinfo?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Page has more than one contentinfo landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/paginas/564",
+            "total_elementos_testados": 41,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/",
+            "total_elementos_testados": 42,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one contentinfo landmark",
+                    "regra_violada": "landmark-no-duplicate-contentinfo",
+                    "como_corrigir": "Page must not have more than one contentinfo landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-contentinfo?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Page has more than one contentinfo landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://site.porciuncula.rj.gov.br/pontos-turisticos/4",
+            "total_elementos_testados": 43,
+            "violacoes": [
+                {
+                    "violacao": "Ensures every HTML document has a lang attribute",
+                    "regra_violada": "html-has-lang",
+                    "como_corrigir": "<html> element must have a lang attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/html-has-lang?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  The <html> element does not have a lang attribute"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one banner landmark",
+                    "regra_violada": "landmark-no-duplicate-banner",
+                    "como_corrigir": "Page must not have more than one banner landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-banner?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Document has more than one banner landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has at most one contentinfo landmark",
+                    "regra_violada": "landmark-no-duplicate-contentinfo",
+                    "como_corrigir": "Page must not have more than one contentinfo landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-no-duplicate-contentinfo?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Page has more than one contentinfo landmark"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures the page has only one main landmark and each iframe in the page has at most one main landmark",
+                    "regra_violada": "landmark-one-main",
+                    "como_corrigir": "Page must have one main landmark",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/landmark-one-main?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html data-capo=\"\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page does not have a main landmark"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

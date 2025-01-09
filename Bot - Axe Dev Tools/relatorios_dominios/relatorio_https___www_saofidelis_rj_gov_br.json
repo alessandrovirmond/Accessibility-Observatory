@@ -1,0 +1,592 @@
+{
+    "titulo": "Relatório de Acessibilidade",
+    "subdominios": [
+        {
+            "url": "https://saofidelis.rj.gov.br/assistencia-social",
+            "total_elementos_testados": 223,
+            "violacoes": [
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/licitacoes/",
+            "total_elementos_testados": 180,
+            "violacoes": [
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/destaques/cartao-alimentacao-e-oferecido-para-pacientes-com-tuberculose/",
+            "total_elementos_testados": 243,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/cidade/",
+            "total_elementos_testados": 154,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/publicacoes/",
+            "total_elementos_testados": 351,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/farmacias",
+            "total_elementos_testados": 141,
+            "violacoes": [
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/geral/resultado-parcial-de-habilitacao-e-abertura-da-fase-de-recursos/",
+            "total_elementos_testados": 248,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/iptu",
+            "total_elementos_testados": 198,
+            "violacoes": [
+                {
+                    "violacao": "Ensures the order of headings is semantically correct",
+                    "regra_violada": "heading-order",
+                    "como_corrigir": "Heading levels should only increase by one",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/heading-order?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<h3 class=\"wp-block-heading\">Como retirar meu IPTU?</h3>",
+                            "selectores": [
+                                ".wp-block-column.wp-block-column-is-layout-flow.is-layout-flow:nth-child(1) > h3"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Heading order invalid"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/ouvidoria/",
+            "total_elementos_testados": 181,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/contracheque-online/",
+            "total_elementos_testados": 191,
+            "violacoes": [
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/assistencia-social/secretaria-de-assistencia-social-e-defesa-civil-municipal-participam-de-treinamento-em-itaperuna/",
+            "total_elementos_testados": 241,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/pmgirs",
+            "total_elementos_testados": 207,
+            "violacoes": [
+                {
+                    "violacao": "Ensures the order of headings is semantically correct",
+                    "regra_violada": "heading-order",
+                    "como_corrigir": "Heading levels should only increase by one",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/heading-order?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<h5 class=\"has-text-align-left wp-block-heading\">ELABORAÇÃO E RESPONSABILIDADE</h5>",
+                            "selectores": [
+                                ".wp-block-column.wp-block-column-is-layout-flow.is-layout-flow:nth-child(1) > h5"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Heading order invalid"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/",
+            "total_elementos_testados": 368,
+            "violacoes": [
+                {
+                    "violacao": "Ensures buttons have discernible text",
+                    "regra_violada": "button-name",
+                    "como_corrigir": "Buttons must have discernible text",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/button-name?application=axeAPI",
+                    "nivel_impacto": "crítico",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<div data-first=\"1\" data-slide-duration=\"0\" data-id=\"14\" data-slide-public-id=\"1\" data-title=\"São Fidélis é reconhecida no Ciclo do ICMS Ecológico 2024\" data-haslink=\"1\" data-href=\"https://saofidelis.rj.gov.br/destaques/sao-fidelis-e-reconhecida-no-ciclo-do-icms-ecologico-2024/\" tabindex=\"0\" role=\"button\" data-n2click=\"url\" data-force-pointer=\"\" class=\"n2-ss-slide n2-ow n2-ss-slide-14 n2-ss-slide-active\" style=\"width: 848px; height: 282.656px; transform: translate3d(0px, 0px, 0px);\">",
+                            "selectores": [
+                                ".n2-ss-slide-active"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element has a value attribute and the value attribute is empty\n  Element has no value attribute or the value attribute is empty\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\"\n  Element has no title attribute or the title attribute is empty"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensure button and link text is not repeated as image alternative",
+                    "regra_violada": "image-redundant-alt",
+                    "como_corrigir": "Text of buttons and links should not be repeated in the image alternative",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/image-redundant-alt?application=axeAPI",
+                    "nivel_impacto": "menor",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29204\" class=\"wp-block-post post-29204 post type-post status-publish format-standard has-post-thumbnail hentry category-destaques category-geral tag-municipio-de-sao-fidelis tag-sao-fidelis\">",
+                            "selectores": [
+                                ".post-29204"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29195\" class=\"wp-block-post post-29195 post type-post status-publish format-standard has-post-thumbnail hentry category-destaques category-geral tag-avisos tag-sao-fidelis\">",
+                            "selectores": [
+                                ".post-29195"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29183\" class=\"wp-block-post post-29183 post type-post status-publish format-standard has-post-thumbnail hentry category-destaques tag-municipio-de-sao-fidelis tag-sao-fidelis\">",
+                            "selectores": [
+                                ".post-29183"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29178\" class=\"wp-block-post post-29178 post type-post status-publish format-standard has-post-thumbnail hentry category-assistencia-social\">",
+                            "selectores": [
+                                ".post-29178"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29170\" class=\"wp-block-post post-29170 post type-post status-publish format-standard has-post-thumbnail hentry category-assistencia-social category-palestra tag-assistencia-social tag-sao-fidelis tag-semas\">",
+                            "selectores": [
+                                ".post-29170"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29164\" class=\"wp-block-post post-29164 post type-post status-publish format-standard has-post-thumbnail hentry category-assistencia-social category-cedami tag-municipio-de-sao-fidelis tag-sao-fidelis tag-semas\">",
+                            "selectores": [
+                                ".post-29164"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29155\" class=\"wp-block-post post-29155 post type-post status-publish format-standard has-post-thumbnail hentry category-destaques\">",
+                            "selectores": [
+                                ".post-29155"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29132\" class=\"wp-block-post post-29132 post type-post status-publish format-standard has-post-thumbnail hentry category-assistencia-social category-cras category-creas category-programas\">",
+                            "selectores": [
+                                ".post-29132"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        },
+                        {
+                            "elemento_html": "<li data-wp-key=\"post-template-item-29126\" class=\"wp-block-post post-29126 post type-post status-publish format-standard has-post-thumbnail hentry category-geral\">",
+                            "selectores": [
+                                ".post-29126"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures links have discernible text",
+                    "regra_violada": "link-name",
+                    "como_corrigir": "Links must have discernible text",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/link-name?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<a href=\"https://fpmsf.rj.gov.br\" target=\"_blank\" rel=\"noreferrer noopener\">",
+                            "selectores": [
+                                "a[href$=\"fpmsf.rj.gov.br\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        },
+                        {
+                            "elemento_html": "<a href=\"/estoque-farmacia-basica-municipal\">",
+                            "selectores": [
+                                ".size-medium.wp-block-image.is-resized:nth-child(3) > a"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        },
+                        {
+                            "elemento_html": "<a href=\"/farmacias\"><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"170\" src=\"https://saofidelis.rj.gov.br/wp-content/uploads/2019/04/plantao_farma-300x170.jpg\" alt=\"\" class=\"wp-image-18646\" style=\"border-radius:8px;aspect-ratio:3/2;object-fit:cover;width:auto;height:128px\"></a>",
+                            "selectores": [
+                                "a[href$=\"farmacias\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        },
+                        {
+                            "elemento_html": "<a href=\"/pmgirs\">",
+                            "selectores": [
+                                "a[href$=\"pmgirs\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        },
+                        {
+                            "elemento_html": "<a href=\"https://www.facebook.com/prefeituradesf?mibextid=LQQJ4d\" target=\"_blank\" rel=\"noreferrer noopener\">",
+                            "selectores": [
+                                ".size-thumbnail.wp-block-image.is-resized:nth-child(1) > a[rel=\"noreferrer\\ noopener\"][target=\"_blank\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        },
+                        {
+                            "elemento_html": "<a href=\"https://www.instagram.com/prefeituradesf?igsh=MWxyNm56c3Q5ZzN3cQ==\">",
+                            "selectores": [
+                                ".size-thumbnail.wp-block-image.is-resized:nth-child(2) > a"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\" class=\"fontawesome-i2svg-active fontawesome-i2svg-complete\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/diariooficial/",
+            "total_elementos_testados": 10082,
+            "violacoes": [
+                {
+                    "violacao": "Ensures links have discernible text",
+                    "regra_violada": "link-name",
+                    "como_corrigir": "Links must have discernible text",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/link-name?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<a href=\"\"></a>",
+                            "selectores": [
+                                "a[href=\"\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://culturaeturismo.saofidelis.rj.gov.br/",
+            "total_elementos_testados": 45,
+            "violacoes": [
+                {
+                    "violacao": "Ensures all page content is contained by landmarks",
+                    "regra_violada": "region",
+                    "como_corrigir": "All page content must be contained by landmarks",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/region?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"en\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Some page content is not contained by landmarks"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/diariooficial",
+            "total_elementos_testados": 10082,
+            "violacoes": [
+                {
+                    "violacao": "Ensures links have discernible text",
+                    "regra_violada": "link-name",
+                    "como_corrigir": "Links must have discernible text",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/link-name?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<a href=\"\"></a>",
+                            "selectores": [
+                                "a[href=\"\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/farmacias/",
+            "total_elementos_testados": 141,
+            "violacoes": [
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/publicacoes",
+            "total_elementos_testados": 351,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/legislacao",
+            "total_elementos_testados": 249,
+            "violacoes": [
+                {
+                    "violacao": "Ensures the order of headings is semantically correct",
+                    "regra_violada": "heading-order",
+                    "como_corrigir": "Heading levels should only increase by one",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/heading-order?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<h4 class=\"wp-block-heading\">Lei Orgânica</h4>",
+                            "selectores": [
+                                "h4:nth-child(2)"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Heading order invalid"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/estoque-farmacia-basica-municipal",
+            "total_elementos_testados": 150,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/fale-com-a-gente/",
+            "total_elementos_testados": 158,
+            "violacoes": [
+                {
+                    "violacao": "Ensures <iframe> and <frame> elements contain a non-empty title attribute",
+                    "regra_violada": "frame-title",
+                    "como_corrigir": "Frames must have title attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/frame-title?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<iframe width=\"400\" height=\"500\" id=\"gmap_canvas\" src=\"https://maps.google.com/maps?q=Pra%C3%A7a%20S%C3%A3o%20Fid%C3%A9lis%2C%20151%20-%20Lot.%20Santa%20Lucia%2C%20S%C3%A3o%20Fid%C3%A9lis%20-%20RJ%2C%2028400-000&amp;t=&amp;z=17&amp;ie=UTF8&amp;iwloc=&amp;output=embed\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\">",
+                            "selectores": [
+                                "#gmap_canvas"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute or the title attribute is empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensures links have discernible text",
+                    "regra_violada": "link-name",
+                    "como_corrigir": "Links must have discernible text",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/link-name?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<a href=\"https://www.emojilib.com\"></a>",
+                            "selectores": [
+                                "a[href$=\"www.emojilib.com\"]"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/assistencia-social/palestra-sobre-saude-do-homem-com-grupo-de-recicladores-e-bpc-loas/",
+            "total_elementos_testados": 257,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/historia/",
+            "total_elementos_testados": 217,
+            "violacoes": [
+                {
+                    "violacao": "Ensures <iframe> and <frame> elements contain a non-empty title attribute",
+                    "regra_violada": "frame-title",
+                    "como_corrigir": "Frames must have title attribute",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/frame-title?application=axeAPI",
+                    "nivel_impacto": "grave",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d474602.1741699377!2d-42.03475487638413!3d-21.67048948942547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xbdb1ddef94d531%3A0xe5ba4d9dc2526364!2sS%C3%A3o+Fid%C3%A9lis+-+RJ%2C+28400-000!5e0!3m2!1spt-PT!2sbr!4v1555352054037!5m2!1spt-PT!2sbr\" width=\"800\" height=\"600\" frameborder=\"0\" style=\"border:0\" allowfullscreen=\"\">",
+                            "selectores": [
+                                "iframe"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute or the title attribute is empty\n  Element's default semantics were not overridden with role=\"presentation\"\n  Element's default semantics were not overridden with role=\"none\""
+                        }
+                    ]
+                },
+                {
+                    "violacao": "Ensure that the page, or at least one of its frames contains a level-one heading",
+                    "regra_violada": "page-has-heading-one",
+                    "como_corrigir": "Page must contain a level-one heading",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/page-has-heading-one?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<html lang=\"pt-BR\">",
+                            "selectores": [
+                                "html"
+                            ],
+                            "texto_contexto": "Fix all of the following:\n  Page must have a level-one heading"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/assistencia-social/dezembro-vermelho-na-guarda-mirim/",
+            "total_elementos_testados": 257,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/destaques/diplomados-prefeito-vice-prefeito-e-vereadores-de-sao-fidelis-nesta-quarta/",
+            "total_elementos_testados": 250,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/destaques/contribuintes-recebem-falsos-emails/",
+            "total_elementos_testados": 250,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/destaques/sao-fidelis-e-reconhecida-no-ciclo-do-icms-ecologico-2024/",
+            "total_elementos_testados": 257,
+            "violacoes": []
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/estrutura-administrativa/",
+            "total_elementos_testados": 580,
+            "violacoes": [
+                {
+                    "violacao": "Ensures the order of headings is semantically correct",
+                    "regra_violada": "heading-order",
+                    "como_corrigir": "Heading levels should only increase by one",
+                    "mais_informacoes": "https://dequeuniversity.com/rules/axe/3.1/heading-order?application=axeAPI",
+                    "nivel_impacto": "moderado",
+                    "elementos_afetados": [
+                        {
+                            "elemento_html": "<h3 class=\"wp-block-heading\"><strong>Prefeito</strong></h3>",
+                            "selectores": [
+                                "h3:nth-child(1)"
+                            ],
+                            "texto_contexto": "Fix any of the following:\n  Heading order invalid"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "https://saofidelis.rj.gov.br/assistencia-social/cedami/confraternizacao-do-cedami-2024/",
+            "total_elementos_testados": 259,
+            "violacoes": []
+        }
+    ]
+}
