@@ -1,0 +1,6 @@
+1 - Obtenção de URLS: 
+	- Estamos pegando qualquer url que tenha o domínio presente na mesma. 
+	(todas absolutas, até onde vimos)
+	- Estamos pegando qualquer Url relativa. Se começa com /, ? ou qualquer outra, ja
+	podemos julgar que pertecem aquele site. Se fosse para jogar para outro site deveria 
+	ser uma URL ABSOLUTA.  
