@@ -59,7 +59,7 @@ def extrair_subpaginas(domain):
 
 
 def salvar_subpaginas_excel(pagina, subpaginas):
-    caminho_arquivo = '../Bot - Axe Dev Tools/insumo-bot-axe.xlsx'
+    caminho_arquivo = '../Bot-AxeDevTools/insumo-bot-axe.xlsx'
 
     data_extracao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
