@@ -89,7 +89,7 @@ def carregar_relatorio_dominio(dominio):
     if os.path.exists(caminho_arquivo):
         with open(caminho_arquivo, 'r', encoding='utf-8') as f:
             return json.load(f)
-    return {"titulo": "Relatório de Acessibilidade", "subdominios": []}
+    return {"dominio": dominio, "subdominios": []}
 
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
