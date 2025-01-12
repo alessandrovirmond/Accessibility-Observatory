@@ -11,6 +11,7 @@ from datetime import datetime
 import time
 import re
 import shutil
+import requests
 
 
 chrome_options = Options()
@@ -24,6 +25,7 @@ chrome_options.add_argument('--headless=new')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 # chrome_options.add_argument('--disable-features=ScriptStreaming')
+
 
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
@@ -93,13 +95,43 @@ def carregar_relatorio_dominio(dominio):
 
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
+    try:
+        print(f"Fazendo post para a API para o domínio: {dominio}")
+        response = requests.post(
+            'http://localhost:3001/api/domains',
+            json=relatorio_dominio
+        )
+        if response.status_code == 201:
+            print(f"Relatório enviado com sucesso para o domínio: {dominio}")
+        else:
+            print(f"Falha ao enviar o relatório para {dominio}. Status Code: {response.status_code}")
+            registrar_erro_api(dominio)
+            return
+    except Exception as e:
+        print(f"Erro ao enviar relatório para {dominio}: {e}")
+        registrar_erro_api(dominio)
+        return
+
+
     dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
     if not os.path.exists('relatorios_dominios'):
         os.makedirs('relatorios_dominios')
     caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
     with open(caminho_arquivo, 'w', encoding='utf-8') as f:
         json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
-    print(f"Relatório salvo para o domínio: {dominio}")
+    print(f"Relatório salvo localmente para o domínio: {dominio}")
+
+
+def registrar_erro_api(dominio):
+    try:
+        with open('errosApi.txt', 'a', encoding='utf-8') as f:
+            f.write(f"{dominio}\n")
+        print(f"Domínio registrado em errosApi.txt: {dominio}")
+    except Exception as e:
+        print(f"Erro ao registrar o domínio em errosApi.txt: {e}")
+
+
+
 
 def criar_backup(nome_arquivo):
     nome_backup = nome_arquivo.replace('.xlsx', '-backup.xlsx')
