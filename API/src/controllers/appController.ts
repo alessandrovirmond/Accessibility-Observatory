@@ -84,4 +84,57 @@ export class DomainController {
       connection.release();
     }
   }
+
+  async getAllDomains(req: Request, res: Response) {
+    try {
+      const [domains] = await this.db.execute('SELECT url from dominio');
+
+      res.status(200).json(domains);
+    } catch (error) {
+      console.error('Erro ao obter os domínios:', error);
+      res.status(500).send({ message: 'Erro ao obter os domínios.' });
+    }
+  }
+  async getSubdomainByDomainId(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const [subdomains] = await this.db.execute(
+        'SELECT * from subdominio WHERE dominio_id = ?',
+        [id]
+      );
+
+      res.status(200).json(subdomains);
+    } catch (error) {
+      console.error('Erro ao obter os subdomínios:', error);
+      res.status(500).send({ message: 'Erro ao obter os subdomínios.' });
+    }
+  }
+  async getViolationsBySubdomainId(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const [violations] = await this.db.execute(
+        'SELECT * from violacao WHERE subdominio_id = ?',
+        [id]
+      );
+
+      res.status(200).json(violations);
+    } catch (error) {
+      console.error('Erro ao obter violações:', error);
+      res.status(500).send({ message: 'Erro ao obter violações.' });
+    }
+  }
+  async getElementsByViolationId(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const [elements] = await this.db.execute(
+        'SELECT * from elemento_afetado WHERE violacao_id = ?',
+        [id]
+      );
+
+      res.status(200).json(elements);
+    } catch (error) {
+      console.error('Erro ao obter elementos:', error);
+      res.status(500).send({ message: 'Erro ao obter elementos.' });
+    }
+  }
 }
