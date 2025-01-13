@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `elemento_afetado` (
 CREATE TABLE IF NOT EXISTS `subdominio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
+  `nota` decimal(2),
   `total_elementos_testados` int(11) NOT NULL,
   `dominio_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
