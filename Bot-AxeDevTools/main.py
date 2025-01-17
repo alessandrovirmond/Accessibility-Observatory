@@ -96,6 +96,10 @@ def carregar_relatorio_dominio(dominio):
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
     try:
+        # Exibe o JSON que será enviado para a API
+        print("=== Relatório de Domínio a ser Enviado ===")
+        print(json.dumps(relatorio_dominio, ensure_ascii=False, indent=4))
+
         print(f"Fazendo post para a API para o domínio: {dominio}")
         response = requests.post(
             'http://localhost:3001/api/domains',
@@ -111,6 +115,16 @@ def salvar_relatorio_dominio(dominio, relatorio_dominio):
         print(f"Erro ao enviar relatório para {dominio}: {e}")
         registrar_erro_api(dominio)
         return
+
+    # Salva o relatório localmente
+    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
+    if not os.path.exists('relatorios_dominios'):
+        os.makedirs('relatorios_dominios')
+    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
+    with open(caminho_arquivo, 'w', encoding='utf-8') as f:
+        json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
+    print(f"Relatório salvo localmente para o domínio: {dominio}")
+
 
 
     dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
@@ -182,7 +196,7 @@ def processar_dominios():
                 buffer_status.append((index, 'JSON CORROMPIDO'))
                 continue
 
-        if pd.isna(status) or status == 'nan':
+        if 1 == 1:
             time.sleep(2)
             num_urls_processadas += 1
             try:
