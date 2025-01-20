@@ -1,0 +1,1 @@
+enum EnumHome { home, report, sobre }
