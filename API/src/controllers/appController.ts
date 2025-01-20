@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Pool } from 'mysql2/promise'; // Supondo que você está usando mysql2 com Promises
+import { Pool } from 'mysql2/promise';
 
 export class DomainController {
   private db: Pool;
@@ -11,7 +11,14 @@ export class DomainController {
   async saveDomain(req: Request, res: Response): Promise<void> {
     const { dominio, subdominios } = req.body;
 
+    console.log(
+      'Recebendo requisição para salvar domínio:',
+      JSON.stringify(req.body, null, 2) // Formata o JSON para exibição
+    );
+    
+
     if (!dominio || !subdominios || !Array.isArray(subdominios)) {
+      console.error('Formato de JSON inválido.');
       res.status(400).send({ message: 'Formato de JSON inválido.' });
       return;
     }
@@ -20,21 +27,43 @@ export class DomainController {
     await connection.beginTransaction();
 
     try {
+      // Limpar todas as tabelas antes de inserir novos dados
+      console.log('Limpando tabelas antes de inserir novos dados...');
+      await connection.execute('SET FOREIGN_KEY_CHECKS = 0');
+      await connection.execute('TRUNCATE TABLE elemento_afetado');
+      await connection.execute('TRUNCATE TABLE violacao');
+      await connection.execute('TRUNCATE TABLE subdominio');
+      await connection.execute('TRUNCATE TABLE dominio');
+      await connection.execute('SET FOREIGN_KEY_CHECKS = 1');
+      console.log('Tabelas limpas com sucesso.');
+
+      // Inserir o domínio
+      console.log('Inserindo domínio:', dominio);
       const [domainResult] = await connection.execute(
-        `INSERT INTO dominio (url) VALUES (?)`,
+        'INSERT INTO dominio (url) VALUES (?)',
         [dominio]
       );
       const dominioId = (domainResult as any).insertId;
+      console.log('Domínio inserido com ID:', dominioId);
 
+      // Inserir subdomínios
       for (const subdominio of subdominios) {
         const { url, total_elementos_testados, violacoes } = subdominio;
 
+        console.log('Inserindo subdomínio:', url);
+        const nota = this.calcularNotaSubdominio({
+          violacoes,
+          total_elementos_testados,
+        });
+
         const [subdomainResult] = await connection.execute(
-          `INSERT INTO subdominio (url, total_elementos_testados, dominio_id) VALUES (?, ?, ?)`,
-          [url, total_elementos_testados, dominioId]
+          'INSERT INTO subdominio (url, nota, total_elementos_testados, dominio_id) VALUES (?, ?, ?, ?)',
+          [url, nota, total_elementos_testados, dominioId]
         );
         const subdominioId = (subdomainResult as any).insertId;
+        console.log('Subdomínio inserido com ID:', subdominioId);
 
+        // Inserir violações
         for (const violacao of violacoes) {
           const {
             violacao: descricaoViolacao,
@@ -45,8 +74,9 @@ export class DomainController {
             elementos_afetados,
           } = violacao;
 
+          console.log('Inserindo violação:', descricaoViolacao);
           const [violationResult] = await connection.execute(
-            `INSERT INTO violacao (descricao, regra_violada, como_corrigir, mais_informacoes, nivel_impacto, subdominio_id) VALUES (?, ?, ?, ?, ?, ?)`,
+            'INSERT INTO violacao (descricao, regra_violada, como_corrigir, mais_informacoes, nivel_impacto, subdominio_id) VALUES (?, ?, ?, ?, ?, ?)',
             [
               descricaoViolacao,
               regra_violada,
@@ -57,12 +87,15 @@ export class DomainController {
             ]
           );
           const violacaoId = (violationResult as any).insertId;
+          console.log('Violação inserida com ID:', violacaoId);
 
+          // Inserir elementos afetados
           for (const elemento of elementos_afetados) {
             const { elemento_html, selectores, texto_contexto } = elemento;
 
+            console.log('Inserindo elemento afetado:', elemento_html);
             await connection.execute(
-              `INSERT INTO elemento_afetado (elemento_html, selectores, texto_contexto, violacao_id) VALUES (?, ?, ?, ?)`,
+              'INSERT INTO elemento_afetado (elemento_html, selectores, texto_contexto, violacao_id) VALUES (?, ?, ?, ?)',
               [
                 elemento_html,
                 JSON.stringify(selectores),
@@ -75,6 +108,7 @@ export class DomainController {
       }
 
       await connection.commit();
+      console.log('Transação concluída com sucesso.');
       res.status(201).send({ message: 'Domínio salvo com sucesso!' });
     } catch (error) {
       await connection.rollback();
@@ -85,56 +119,180 @@ export class DomainController {
     }
   }
 
-  async getAllDomains(req: Request, res: Response) {
-    try {
-      const [domains] = await this.db.execute('SELECT url from dominio');
+  calcularNotaSubdominio(subdominio: any): number {
+    const PESO_IMPACTO: Record<'crítico' | 'grave' | 'moderado' | 'menor', number> = {
+      crítico: 7,
+      grave: 5,
+      moderado: 3,
+      menor: 1,
+    };
+    const K = 10; // Fator de normalização
+  
+    let severidadeTotal = 0;
+    const violacoes = subdominio.violacoes || [];
+    const totalElementosTestados = subdominio.total_elementos_testados || 0;
+  
+    for (const violacao of violacoes) {
+      const nivelImpacto = (violacao.nivel_impacto || '').toLowerCase() as keyof typeof PESO_IMPACTO;
+  
+      const peso = PESO_IMPACTO[nivelImpacto] || 0;
+  
+      const elementosAfetados = violacao.elementos_afetados || [];
+      const quantidadeElementosAfetados = elementosAfetados.length;
+  
+      const porcentagemAfetada =
+        totalElementosTestados > 0
+          ? quantidadeElementosAfetados / totalElementosTestados
+          : 0;
+  
+      severidadeTotal += peso * porcentagemAfetada;
+    }
+  
+    // Calcula a nota como número decimal
+    const nota = Math.max(1, 10 - severidadeTotal * K);
+  
+    // Exibe a nota no console
+    console.log(`Nota calculada para o subdomínio: ${nota.toFixed(2)}`);
+  
+    // Retorna o valor como um número decimal
+    return parseFloat(nota.toFixed(2));
+  }
+  
 
-      res.status(200).json(domains);
+  async getAllDomains(req: Request, res: Response) {
+    console.warn('Requisição para obter todos os domínios recebida.');
+    try {
+      const query = `
+        SELECT 
+          d.id AS dominio_id,
+          d.url AS dominio,
+          COUNT(DISTINCT s.id) AS total_paginas,
+          COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
+          COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
+          COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
+          COALESCE(AVG(s.nota), 0) AS nota_dominio
+        FROM dominio d
+        LEFT JOIN subdominio s ON s.dominio_id = d.id
+        LEFT JOIN (
+          SELECT 
+            subdominio_id,
+            COUNT(*) AS total_violacoes
+          FROM violacao
+          GROUP BY subdominio_id
+        ) v ON v.subdominio_id = s.id
+        LEFT JOIN (
+          SELECT 
+            v.subdominio_id,
+            COUNT(*) AS total_elementos_afetados
+          FROM elemento_afetado e
+          INNER JOIN violacao v ON e.violacao_id = v.id
+          GROUP BY v.subdominio_id
+        ) e ON e.subdominio_id = s.id
+        GROUP BY d.id, d.url;
+      `;
+  
+      const [domains] = await this.db.execute(query);
+      console.warn('Domínios recuperados com sucesso:', domains);
+  
+      // Envolvendo os dados em uma chave "data"
+      res.status(200).json({ data: domains });
     } catch (error) {
       console.error('Erro ao obter os domínios:', error);
       res.status(500).send({ message: 'Erro ao obter os domínios.' });
     }
   }
+
+
+
   async getSubdomainByDomainId(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    console.warn('Requisição para obter subdomínios do domínio com ID:', id);
     try {
-      const id = Number(req.params.id);
+      // SQL modificado para incluir as informações adicionais
       const [subdomains] = await this.db.execute(
-        'SELECT * from subdominio WHERE dominio_id = ?',
+        `SELECT 
+        s.id AS subdominio_id,
+        s.url AS subdominio_url,
+        CAST(s.nota AS DECIMAL(10,2)) AS subdominio_nota,  -- Garantindo que a nota seja retornada como número
+        COUNT(DISTINCT v.id) AS violacoes,
+        COUNT(DISTINCT e.id) AS elementos_afetados,
+        s.total_elementos_testados AS elementosTestados
+      FROM 
+        subdominio s
+      LEFT JOIN violacao v ON v.subdominio_id = s.id
+      LEFT JOIN elemento_afetado e ON e.violacao_id = v.id
+      WHERE 
+        s.dominio_id = ?
+      GROUP BY 
+        s.id;
+      `,
         [id]
       );
-
-      res.status(200).json(subdomains);
+      
+      // Log da consulta para depuração
+      console.warn('Subdomínios com informações adicionais recuperados com sucesso:', subdomains);
+      
+      // Retorna os dados dentro de uma chave 'data'
+      res.status(200).json({ data: subdomains });
     } catch (error) {
       console.error('Erro ao obter os subdomínios:', error);
       res.status(500).send({ message: 'Erro ao obter os subdomínios.' });
     }
   }
+  
+
   async getViolationsBySubdomainId(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    console.warn('Requisição para obter violações do subdomínio com ID:', id);
     try {
-      const id = Number(req.params.id);
+      // SQL modificado para incluir os campos desejados e a contagem de elementos afetados
       const [violations] = await this.db.execute(
-        'SELECT * from violacao WHERE subdominio_id = ?',
+        `SELECT 
+  v.id AS "id",
+  v.descricao AS "violacao",
+  v.regra_violada AS "regra_violada",
+  v.como_corrigir AS "como_corrigir",
+  v.mais_informacoes AS "mais_informacoes",  -- Faltava a aspas de fechamento aqui
+  v.nivel_impacto AS "nivel_impacto",
+  COUNT(DISTINCT e.id) AS "elementos_afetados"
+FROM 
+  violacao v
+LEFT JOIN elemento_afetado e ON e.violacao_id = v.id
+WHERE 
+  v.subdominio_id = ?
+GROUP BY 
+  v.id;
+`,
         [id]
       );
-
-      res.status(200).json(violations);
+      
+      console.warn('Violações recuperadas com sucesso:', violations);
+      
+      // Retorna os dados dentro da chave 'data'
+      res.status(200).json({ data: violations });
     } catch (error) {
       console.error('Erro ao obter violações:', error);
       res.status(500).send({ message: 'Erro ao obter violações.' });
     }
   }
+  
+
   async getElementsByViolationId(req: Request, res: Response) {
+    const id = Number(req.params.id);
+    console.warn('Requisição para obter elementos da violação com ID:', id);
     try {
-      const id = Number(req.params.id);
       const [elements] = await this.db.execute(
-        'SELECT * from elemento_afetado WHERE violacao_id = ?',
+        'SELECT * FROM elemento_afetado WHERE violacao_id = ?',
         [id]
       );
-
-      res.status(200).json(elements);
+      console.warn('Elementos recuperados com sucesso:', elements);
+  
+      // Retorna os dados dentro de uma chave 'data'
+      res.status(200).json({ data: elements });
     } catch (error) {
       console.error('Erro ao obter elementos:', error);
       res.status(500).send({ message: 'Erro ao obter elementos.' });
     }
   }
+
 }
