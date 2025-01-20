@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import cors from 'cors'; // Importa o middleware CORS
 import { DomainController } from '../controllers/appController';
 import { createPool } from 'mysql2/promise';
 
@@ -9,11 +10,20 @@ const dbPool = createPool({
   user: 'root',
   password: '',
   database: 'observatorio',
-  port: 3308,
+  port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+router.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
 const domainController = new DomainController(dbPool);
 
 router.post('/domains', (req, res) => domainController.saveDomain(req, res));

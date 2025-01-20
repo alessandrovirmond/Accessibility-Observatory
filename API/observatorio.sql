@@ -2,7 +2,7 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3308
+-- Host: localhost:3306
 -- Tempo de geração: 12/01/2025 às 20:20
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `elemento_afetado` (
 CREATE TABLE IF NOT EXISTS `subdominio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
-  `nota` decimal(2),
+  `nota` decimal(2) NOT NULL,
   `total_elementos_testados` int(11) NOT NULL,
   `dominio_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
