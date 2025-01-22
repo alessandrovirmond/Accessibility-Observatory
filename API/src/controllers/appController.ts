@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import { Pool } from 'mysql2/promise';
+import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 export class DomainController {
   private db: Pool;
+  private DATE_FILE_PATH = join(__dirname, 'date.json');
 
   constructor(db: Pool) {
     this.db = db;
@@ -173,7 +176,6 @@ export class DomainController {
 
 
   
-
   async getAllDomains(req: Request, res: Response) {
     console.warn('Requisição para obter todos os domínios recebida.');
     try {
@@ -181,10 +183,18 @@ export class DomainController {
         SELECT 
           d.id AS dominio_id,
           d.url AS dominio,
+          d.estado, -- Incluindo estado
+          d.municipio, -- Incluindo município
           COUNT(DISTINCT s.id) AS total_paginas,
           COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
-          COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
-          COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
+          CASE 
+            WHEN COUNT(DISTINCT s.id) > 0 THEN COALESCE(SUM(v.total_violacoes), 0) / COUNT(DISTINCT s.id)
+            ELSE 0 
+          END AS media_violacoes_por_pagina,
+          CASE 
+            WHEN COUNT(DISTINCT s.id) > 0 THEN COALESCE(SUM(e.total_elementos_afetados), 0) / COUNT(DISTINCT s.id)
+            ELSE 0 
+          END AS media_elementos_afetados_por_pagina,
           COALESCE(AVG(s.nota), 0) AS nota_dominio
         FROM dominio d
         LEFT JOIN subdominio s ON s.dominio_id = d.id
@@ -203,20 +213,19 @@ export class DomainController {
           INNER JOIN violacao v ON e.violacao_id = v.id
           GROUP BY v.subdominio_id
         ) e ON e.subdominio_id = s.id
-        GROUP BY d.id, d.url;
+        GROUP BY d.id, d.url, d.estado, d.municipio;
       `;
   
       const [domains] = await this.db.execute(query);
       console.warn('Domínios recuperados com sucesso:', domains);
   
-      // Envolvendo os dados em uma chave "data"
       res.status(200).json({ data: domains });
     } catch (error) {
       console.error('Erro ao obter os domínios:', error);
       res.status(500).send({ message: 'Erro ao obter os domínios.' });
     }
   }
-
+  
 
 
   async getSubdomainByDomainId(req: Request, res: Response) {
@@ -310,4 +319,164 @@ GROUP BY
     }
   }
 
+  async getDomainByState(req: Request, res: Response) {
+    let { state } = req.params;
+    
+    // Substitui underscores por espaços
+    state = state.replace(/_/g, ' ');
+  
+    console.warn(`Requisição para obter domínios do estado: ${state}`);
+  
+    try {
+      const query = `
+        SELECT 
+          d.id AS dominio_id,
+          d.url AS dominio,
+          d.estado,
+          d.municipio,
+          COUNT(DISTINCT s.id) AS total_paginas,
+          COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
+          COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
+          COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
+          COALESCE(AVG(s.nota), 0) AS nota_dominio
+        FROM dominio d
+        LEFT JOIN subdominio s ON s.dominio_id = d.id
+        LEFT JOIN (
+          SELECT 
+            subdominio_id,
+            COUNT(*) AS total_violacoes
+          FROM violacao
+          GROUP BY subdominio_id
+        ) v ON v.subdominio_id = s.id
+        LEFT JOIN (
+          SELECT 
+            v.subdominio_id,
+            COUNT(*) AS total_elementos_afetados
+          FROM elemento_afetado e
+          INNER JOIN violacao v ON e.violacao_id = v.id
+          GROUP BY v.subdominio_id
+        ) e ON e.subdominio_id = s.id
+        WHERE d.estado = ?
+        GROUP BY d.id, d.url;
+      `;
+  
+      const [domains] = await this.db.execute(query, [state]);
+  
+      console.warn('Domínios do estado recuperados com sucesso:', domains);
+      res.status(200).json({ data: domains });
+    } catch (error) {
+      console.error('Erro ao obter domínios por estado:', error);
+      res.status(500).send({ message: 'Erro ao obter domínios por estado.' });
+    }
+  }
+  
+
+
+  async getDomainsGraph(req: Request, res: Response) {
+    console.warn('Requisição para obter os 20 domínios com maiores notas.');
+
+    try {
+      const query = `
+        SELECT 
+          d.id AS dominio_id,
+          d.url AS dominio,
+          d.estado,
+          d.municipio,
+          COUNT(DISTINCT s.id) AS total_paginas,
+          COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
+          COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
+          COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
+          COALESCE(AVG(s.nota), 0) AS nota_dominio
+        FROM dominio d
+        LEFT JOIN subdominio s ON s.dominio_id = d.id
+        LEFT JOIN (
+          SELECT 
+            subdominio_id,
+            COUNT(*) AS total_violacoes
+          FROM violacao
+          GROUP BY subdominio_id
+        ) v ON v.subdominio_id = s.id
+        LEFT JOIN (
+          SELECT 
+            v.subdominio_id,
+            COUNT(*) AS total_elementos_afetados
+          FROM elemento_afetado e
+          INNER JOIN violacao v ON e.violacao_id = v.id
+          GROUP BY v.subdominio_id
+        ) e ON e.subdominio_id = s.id
+        GROUP BY d.id, d.url
+        ORDER BY AVG(s.nota) DESC
+        LIMIT 20;
+      `;
+
+      const [domains] = await this.db.execute(query);
+
+      console.warn('Os 20 domínios com maiores notas recuperados com sucesso:', domains);
+      res.status(200).json({ data: domains });
+    } catch (error) {
+      console.error('Erro ao obter os 20 domínios com maiores notas:', error);
+      res.status(500).send({ message: 'Erro ao obter os 20 domínios com maiores notas.' });
+    }
+  }
+
+   saveCurrentDate(): void {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('pt-BR');
+
+    const dateData = {
+      data: formattedDate,
+    };
+
+    // Escrever a data no arquivo JSON
+    writeFileSync(this.DATE_FILE_PATH, JSON.stringify(dateData, null, 2));
+    console.log('Data atual salva com sucesso no arquivo:', dateData);
+  }
+
+
+  async getStates(req: Request, res: Response) {
+    console.warn('Requisição para obter todos os estados distintos');
+  
+    try {
+      const query = `
+        SELECT DISTINCT estado
+        FROM dominio
+        WHERE estado IS NOT NULL AND estado != ''
+        ORDER BY estado ASC;
+      `;
+  
+      const [rows] = await this.db.execute(query);
+  
+      // Verifica se a consulta retornou resultados e acessa a propriedade 'rows'
+      if (Array.isArray(rows)) {
+        const estadoList = rows.map((row: any) => row.estado); // Aqui acessa 'estado' de cada linha
+        console.warn('Estados distintos recuperados com sucesso:', estadoList);
+        res.status(200).json({ data: estadoList });
+      } else {
+        res.status(500).send({ message: 'Erro ao processar os dados.' });
+      }
+  
+    } catch (error) {
+      console.error('Erro ao obter estados distintos:', error);
+      res.status(500).send({ message: 'Erro ao obter estados distintos.' });
+    }
+  }
+  
+  
+  
+  getDate(req: Request, res: Response): void {
+    try {
+      if (!existsSync(this.DATE_FILE_PATH)) {
+        res.status(404).json({ message: 'Data não encontrada. Salve a data primeiro.' });
+      }
+
+      const dateData = readFileSync(this.DATE_FILE_PATH, 'utf-8');
+      const parsedData = JSON.parse(dateData);
+
+      res.status(200).json({ data: parsedData.data });
+    } catch (error) {
+      console.error('Erro ao ler a data do arquivo:', error);
+      res.status(500).json({ message: 'Erro ao obter a data.' });
+    }
+  }
+  
 }

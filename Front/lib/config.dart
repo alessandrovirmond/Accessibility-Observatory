@@ -8,6 +8,7 @@ class Config {
   static EnumHome enumHome = EnumHome.home; 
   static EnumReport enumReport = EnumReport.domain;
   static String label = "RJ";
+  static String estado = "Todos";
   static int id = 0;
   static List<ButtonData> listButton = [
   ButtonData(label: "RJ", id: 0 , enumReport: EnumReport.domain),

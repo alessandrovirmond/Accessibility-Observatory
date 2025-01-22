@@ -25,7 +25,6 @@ class _HomeChartState extends State<HomeChart> {
   @override
   void initState() {
     dataMap = controller.call();
-
     super.initState();
   }
 
@@ -69,61 +68,56 @@ class _HomeChartState extends State<HomeChart> {
                     flex: 4,
                     child: Column(
                       children: [
-                         Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                           child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Notas de Acessibilidade',
-                                      style: TextStyle(
-                                          fontSize: isSmallScreen ? 20 : 25,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 10,
-                                          height: 10,
-                                          color: Colors.blue.shade700,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          "Nota",
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Notas de Acessibilidade',
+                                style: TextStyle(
+                                  fontSize: isSmallScreen ? 20 : 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                         ),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    color: Colors.blue.shade700,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Nota",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         Expanded(
                           flex: 6,
                           child: Container(
                             padding: const EdgeInsets.all(16),
                             child: SfCartesianChart(
-                              // Fundo branco
                               backgroundColor: Colors.white,
-                              plotAreaBorderWidth:
-                                  0, // Remove a borda do gráfico
+                              plotAreaBorderWidth: 0,
                               primaryXAxis: CategoryAxis(
                                 labelStyle: TextStyle(
                                   fontSize: isSmallScreen ? 10 : 12,
                                 ),
-
-                                labelIntersectAction:
-                                    AxisLabelIntersectAction.trim,
-                                majorGridLines: const MajorGridLines(
-                                    width: 0), // Remove linhas verticais
+                                labelIntersectAction: AxisLabelIntersectAction.trim,
+                                majorGridLines: const MajorGridLines(width: 0),
                               ),
                               primaryYAxis: NumericAxis(
                                 edgeLabelPlacement: EdgeLabelPlacement.shift,
                                 labelStyle: const TextStyle(fontSize: 10),
                                 majorTickLines: const MajorTickLines(size: 6),
-                                majorGridLines: const MajorGridLines(
-                                    width: 0), // Remove linhas horizontais
-                                numberFormat: NumberFormat('#,##0'),
+                                majorGridLines: const MajorGridLines(width: 0),
+                                numberFormat: NumberFormat('#,##0.00'), // Permite exibição de double
                                 name: "Nota",
                               ),
                               axes: <ChartAxis>[
@@ -132,27 +126,23 @@ class _HomeChartState extends State<HomeChart> {
                                   labelStyle: const TextStyle(fontSize: 10),
                                   majorTickLines: const MajorTickLines(size: 6),
                                   axisLine: const AxisLine(width: 0),
-                                  majorGridLines: const MajorGridLines(
-                                      width:
-                                          0), // Remove linhas horizontais (eixo oposto)
+                                  majorGridLines: const MajorGridLines(width: 0),
                                   name: "Páginas",
-                                  numberFormat: NumberFormat('#,##0'),
+                                  numberFormat: NumberFormat('#,##0'), // Este eixo pode ser mantido como inteiro
                                 ),
                               ],
                               series: [
                                 ColumnSeries<ChartData, String>(
-                                    dataSource: createChartData(data),
-                                    xValueMapper: (ChartData data, _) {
-                                      return data.name;
-                                    },
-                                    yValueMapper: (ChartData data, _) =>
-                                        data.value,
-                                    name: "Nota",
-                                    color: Colors.blue.shade700),
+                                  dataSource: createChartData(data),
+                                  xValueMapper: (ChartData data, _) => data.name,
+                                  yValueMapper: (ChartData data, _) => data.value,
+                                  name: "Nota",
+                                  color: Colors.blue.shade700,
+                                ),
                               ],
                               tooltipBehavior: TooltipBehavior(
                                 enable: true,
-                                format: 'point.y',
+                                format: 'point.y', // Exibe double no tooltip
                               ),
                             ),
                           ),

@@ -35,7 +35,9 @@ class DomainController implements IReportController {
 
   List<PlutoColumn> getCollumnsReport(
       {required void setReport(
-          {required EnumReport enumReport, required int id, required String label})}) {
+          {required EnumReport enumReport,
+          required int id,
+          required String label})}) {
     return [
       PlutoColumn(
         title: "",
@@ -54,9 +56,10 @@ class DomainController implements IReportController {
             onPressed: () {
               final String value = rendererContext.cell.value;
               final List<String> list = value.split("*&*");
-              final int? id = int.tryParse(list[0]); 
+              final int? id = int.tryParse(list[0]);
 
-              setReport(id: id ?? 0, enumReport: EnumReport.page, label: list[1]);
+              setReport(
+                  id: id ?? 0, enumReport: EnumReport.page, label: list[1]);
 
               // Recarrega o ReportPage chamando o setState
               rendererContext.stateManager.notifyListeners();
@@ -68,70 +71,32 @@ class DomainController implements IReportController {
           );
         },
       ),
-   
+      PlutoColumn(
+          title: "Estado",
+          field: "Estado",
+          type: PlutoColumnType.text(),
+          width: 180),
+      PlutoColumn(
+          title: "Município",
+          field: "Município",
+          type: PlutoColumnType.text(),
+          width: 180),
       PlutoColumn(
           title: "Domínio",
           field: "Domínio",
           type: PlutoColumnType.text(),
           width: 180),
       PlutoColumn(
-          title: "Nota do Domínio",
-          field: "Nota do Domínio",
+          title: "Nota",
+          field: "Nota",
           type: PlutoColumnType.number(locale: "pt_Br", format: "#,##0.00"),
-          width: 180),
-           PlutoColumn(
-          title: "Total de Páginas",
-          field: "Total de Páginas",
-          type: PlutoColumnType.number(locale: "pt_Br"),
-          width: 180,
-          footerRenderer: (context) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlutoAggregateColumnFooter(
-                rendererContext: context,
-                formatAsCurrency: false,
-                type: PlutoAggregateColumnType.sum,
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: 'Total: ',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    TextSpan(
-                        text:
-                           text),
-                  ];
-                },
-              ),
-              PlutoAggregateColumnFooter(
-                rendererContext: context,
-                formatAsCurrency: false,
-                type: PlutoAggregateColumnType.average,
-                alignment: Alignment.center,
-                titleSpanBuilder: (text) {
-                  return [
-                    const TextSpan(
-                      text: 'Média: ',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    TextSpan(
-                        text:
-                           text),
-                  ];
-                },
-              ),
-            ],
-          );
-        },),
+          width: 150),
       PlutoColumn(
-          title: 'Total de Violações',
-          field: 'Total de Violações',
-          type: PlutoColumnType.number(locale: "pt_Br"),
-          width: 180,
-          footerRenderer: (context) {
+        title: "Total de Páginas",
+        field: "Total de Páginas",
+        type: PlutoColumnType.number(locale: "pt_Br"),
+        width: 180,
+        footerRenderer: (context) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,9 +112,7 @@ class DomainController implements IReportController {
                       text: 'Total: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
@@ -164,22 +127,20 @@ class DomainController implements IReportController {
                       text: 'Média: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
             ],
           );
         },
-          ),
+      ),
       PlutoColumn(
-          title: 'Média de Violações por Página',
-          field: 'Média de Violações por Página',
-          type: PlutoColumnType.number(locale: "pt_Br"),
-          width: 180,
-          footerRenderer: (context) {
+        title: 'Total de Violações',
+        field: 'Total de Violações',
+        type: PlutoColumnType.number(locale: "pt_Br"),
+        width: 180,
+        footerRenderer: (context) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,9 +156,7 @@ class DomainController implements IReportController {
                       text: 'Total: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
@@ -212,22 +171,20 @@ class DomainController implements IReportController {
                       text: 'Média: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
             ],
           );
         },
-        ),
+      ),
       PlutoColumn(
-          title: 'Média de Elementos Afetados por Página',
-          field: 'Média de Elementos Afetados por Página',
-          type: PlutoColumnType.number(locale: "pt_Br"),
-          width: 180,
-          footerRenderer: (context) {
+        title: 'Média de Violações por Página',
+        field: 'Média de Violações por Página',
+        type: PlutoColumnType.number(locale: "pt_Br"),
+        width: 180,
+        footerRenderer: (context) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,9 +200,7 @@ class DomainController implements IReportController {
                       text: 'Total: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
@@ -260,16 +215,58 @@ class DomainController implements IReportController {
                       text: 'Média: ',
                       style: TextStyle(color: Colors.red),
                     ),
-                    TextSpan(
-                        text:
-                           text),
+                    TextSpan(text: text),
                   ];
                 },
               ),
             ],
           );
-        },),
-    
+        },
+      ),
+      PlutoColumn(
+        title: 'Média de Elementos Afetados por Página',
+        field: 'Média de Elementos Afetados por Página',
+        type: PlutoColumnType.number(locale: "pt_Br"),
+        width: 180,
+        footerRenderer: (context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PlutoAggregateColumnFooter(
+                rendererContext: context,
+                formatAsCurrency: false,
+                type: PlutoAggregateColumnType.sum,
+                alignment: Alignment.center,
+                titleSpanBuilder: (text) {
+                  return [
+                    const TextSpan(
+                      text: 'Total: ',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    TextSpan(text: text),
+                  ];
+                },
+              ),
+              PlutoAggregateColumnFooter(
+                rendererContext: context,
+                formatAsCurrency: false,
+                type: PlutoAggregateColumnType.average,
+                alignment: Alignment.center,
+                titleSpanBuilder: (text) {
+                  return [
+                    const TextSpan(
+                      text: 'Média: ',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    TextSpan(text: text),
+                  ];
+                },
+              ),
+            ],
+          );
+        },
+      ),
     ];
   }
 }

@@ -38,4 +38,34 @@ router.get('/violations/:id/elements', (req, res) =>
   domainController.getElementsByViolationId(req, res)
 );
 
+
+  // Rota para obter todos os domínios de um estado específico ou todos os domínios
+  router.get('/domains/:state', async (req, res) => {
+    const { state } = req.params;
+
+    if (state === 'all') {
+     
+      domainController.getAllDomains(req, res);
+    }else {
+
+      domainController.getDomainByState(req, res);
+    }
+
+  });
+
+   // Rota para obter os 20 domínios com as maiores notas
+   router.get('/domains/graph', async (req, res) => {
+    domainController.getDomainsGraph(req, res);
+  });
+
+  router.get('/state', (req, res) =>
+    domainController.getStates(req, res)
+  );
+
+  router.get('/date', (req, res) =>
+    domainController.getDate(req, res)
+  );
+
+ 
+
 export default router;

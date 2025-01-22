@@ -10,6 +10,7 @@ import 'package:accessibility_audit/report/page/components/button_report.dart';
 import 'package:accessibility_audit/report/page/components/button_top_menu.dart';
 import 'package:accessibility_audit/report/page/components/button_top_menu_model.dart';
 import 'package:accessibility_audit/report/page/components/export_services/export_pluto_grid.dart';
+import 'package:accessibility_audit/report/repository/state_repository.dart';
 import 'package:accessibility_audit/services/file_save/save_file.dart';
 import 'package:flutter/material.dart';
 import 'package:accessibility_audit/report/controller/domain_contoller.dart';
@@ -25,11 +26,37 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   late IReportController controller;
+  final StateRepository stateRepo = StateRepository();
+  List<String> estados = ["Todos"]; // Inicia com "Todos"
+
+  // Função para pegar os estados e preencher a lista
+  Future<void> _getEstados() async {
+    try {
+      // Chama o repositório para obter os estados
+      List<String> estadosObtidos = await stateRepo.get();
+      setState(() {
+        // Atualiza a lista de estados com os dados obtidos e adiciona "Todos" no final
+        estados = ["Todos"] + estadosObtidos;
+      });
+    } catch (e) {
+      print('Erro ao buscar estados: $e');
+      // Caso ocorra erro, pode-se adicionar algum fallback ou notificação
+    }
+  }
 
   @override
+  void setEstado(String estado) {
+    setState(() {
+      Config.estado = estado;
+      Config.enumReport = EnumReport.domain;
+      Config.listButton.clear();
+    });
+    _reloadReport();
+  }
+
   initState() {
     controller = Config.enumReport.controller;
-
+    _getEstados();
     super.initState();
   }
 
@@ -37,30 +64,30 @@ class _ReportPageState extends State<ReportPage> {
     setState(() {});
   }
 
-void setReport({
-  required EnumReport enumReport,
-  required String label,
-  required int id,
-  bool add = true,
-}) {
-  // Tratamento para remover ocorrências específicas do label
-  final treatedLabel = label
-      .replaceAll('http://', '')
-      .replaceAll('https://', '')
-      .replaceAll('www.', '')
-      .replaceAll('.rj.gov.br', '');
+  void setReport({
+    required EnumReport enumReport,
+    required String label,
+    required int id,
+    bool add = true,
+  }) {
+    // Tratamento para remover ocorrências específicas do label
+    final treatedLabel = label
+        .replaceAll('http://', '')
+        .replaceAll('https://', '')
+        .replaceAll('www.', '')
+        .replaceAll('.rj.gov.br', '');
 
-  Config.enumReport = enumReport;
-  Config.id = id;
+    Config.enumReport = enumReport;
+    Config.id = id;
 
-  if (add) {
-    Config.listButton.add(ButtonData(label: treatedLabel, id: id, enumReport: enumReport));
+    if (add) {
+      Config.listButton
+          .add(ButtonData(label: treatedLabel, id: id, enumReport: enumReport));
+    }
+
+    controller = Config.enumReport.controller;
+    _reloadReport();
   }
-
-  controller = Config.enumReport.controller;
-  _reloadReport();
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,47 +102,87 @@ void setReport({
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                children: Config.listButton.asMap().entries.map((entry) {
-                  final int index = entry.key;
-                  final ButtonData buttonData = entry.value;
-                  final bool isLast = index == Config.listButton.length - 1;
-
-                  return Row(
-                    children: [
-                      if (index > 0)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                          child: Icon(
-                            Icons.keyboard_arrow_right,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ButtonReport(
-                        data: buttonData,
-                        callback: () {
-                          if (isLast) {
-                            setReport(
-                              add: false,
-                              enumReport: buttonData.enumReport,
-                              label: buttonData.label,
-                              id: buttonData.id
-                            );
-                          } else {
-                            Config.listButton.removeRange(
-                                index + 1, Config.listButton.length);
-                            setReport(
-                              add: false,
-                              enumReport: buttonData.enumReport,
-                              id: buttonData.id,
-                              label: buttonData.label
-                            );
-                          }
-                        },
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    constraints: const BoxConstraints(
+                      maxWidth: 320, // Limita a largura máxima do botão
+                      minHeight: 40, // Altura mínima
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white, width: 3),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(5, 5),
+                        )
+                      ],
+                    ),
+                    child: DropdownButton<String>(
+                      value: Config.estado.isNotEmpty ? Config.estado : "Todos",
+                      hint: const Text(
+                        "Selecione um estado",
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],
-                  );
-                }).toList(),
+                      items: estados.map((String estado) {
+                        return DropdownMenuItem<String>(
+                          value: estado,
+                          child: Text(estado),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setEstado(newValue); // Atualiza o estado e recarrega
+                        }
+                      },
+                    ),
+                  ),
+                  Row(
+                    children: Config.listButton.asMap().entries.map((entry) {
+                      final int index = entry.key;
+                      final ButtonData buttonData = entry.value;
+                      final bool isLast = index == Config.listButton.length - 1;
+
+                      return Row(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 2.0),
+                            child: Icon(
+                              Icons.keyboard_arrow_right,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                          ButtonReport(
+                            data: buttonData,
+                            callback: () {
+                              if (isLast) {
+                                setReport(
+                                    add: false,
+                                    enumReport: buttonData.enumReport,
+                                    label: buttonData.label,
+                                    id: buttonData.id);
+                              } else {
+                                Config.listButton.removeRange(
+                                    index + 1, Config.listButton.length);
+                                setReport(
+                                    add: false,
+                                    enumReport: buttonData.enumReport,
+                                    id: buttonData.id,
+                                    label: buttonData.label);
+                              }
+                            },
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -174,7 +241,7 @@ void setReport({
                           ],
                         );
                       }),
-                       SizedBox(
+                  SizedBox(
                     width: 5,
                   ),
                   ExportButton(

@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 class PlutoGridExamplePage extends StatefulWidget {
   final Future<List<PlutoRow>> futureRow;
   final List<PlutoColumn> collumn;
-  final Stream<int>? percent;
   final String? title;
   final Widget? info;
   IReportController controller;
@@ -38,7 +37,6 @@ class PlutoGridExamplePage extends StatefulWidget {
     super.key,
     required this.futureRow,
     required this.collumn,
-    this.percent,
     this.title,
     this.info,
     required this.controller,
@@ -77,7 +75,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             future: widget.futureRow,
             builder: (context, snap) {
               if (snap.connectionState == ConnectionState.waiting) {
-                return GlobalPageLoadingPercent(percent: widget.percent);
+                return GlobalPageLoading();
               }
               return PlutoGrid(
                 columns: widget.collumn,
