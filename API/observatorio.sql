@@ -28,10 +28,11 @@ USE `observatorio`;
 --
 -- Estrutura para tabela `dominio`
 --
-
 CREATE TABLE IF NOT EXISTS `dominio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
+  `estado` varchar(100) NOT NULL, -- Nova coluna para armazenar o estado
+  `municipio` varchar(100) NOT NULL, -- Nova coluna para armazenar o município
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `elemento_afetado` (
 CREATE TABLE IF NOT EXISTS `subdominio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(255) NOT NULL,
-  `nota` decimal(2) NOT NULL,
+  `nota` DECIMAL(10, 2) NOT NULL,
   `total_elementos_testados` int(11) NOT NULL,
   `dominio_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -93,19 +94,20 @@ CREATE TABLE IF NOT EXISTS `violacao` (
 -- Restrições para tabelas `elemento_afetado`
 --
 ALTER TABLE `elemento_afetado`
-  ADD CONSTRAINT `elemento_afetado_ibfk_1` FOREIGN KEY (`violacao_id`) REFERENCES `violacao` (`id`);
+  ADD CONSTRAINT `elemento_afetado_ibfk_1` FOREIGN KEY (`violacao_id`) REFERENCES `violacao` (`id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `subdominio`
 --
 ALTER TABLE `subdominio`
-  ADD CONSTRAINT `subdominio_ibfk_1` FOREIGN KEY (`dominio_id`) REFERENCES `dominio` (`id`);
+  ADD CONSTRAINT `subdominio_ibfk_1` FOREIGN KEY (`dominio_id`) REFERENCES `dominio` (`id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `violacao`
 --
 ALTER TABLE `violacao`
-  ADD CONSTRAINT `violacao_ibfk_1` FOREIGN KEY (`subdominio_id`) REFERENCES `subdominio` (`id`);
+  ADD CONSTRAINT `violacao_ibfk_1` FOREIGN KEY (`subdominio_id`) REFERENCES `subdominio` (`id`) ON DELETE CASCADE;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

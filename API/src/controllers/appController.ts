@@ -9,154 +9,169 @@ export class DomainController {
   }
 
   async saveDomain(req: Request, res: Response): Promise<void> {
-    const { dominio, subdominios } = req.body;
+    const { dominio, subdominios, estado, municipio } = req.body;
 
-    console.log(
-      'Recebendo requisição para salvar domínio:',
-      JSON.stringify(req.body, null, 2) // Formata o JSON para exibição
-    );
-    
+    console.log('Recebendo requisição para salvar domínio:', dominio);
 
-    if (!dominio || !subdominios || !Array.isArray(subdominios)) {
-      console.error('Formato de JSON inválido.');
-      res.status(400).send({ message: 'Formato de JSON inválido.' });
-      return;
-    }
+    // Exibindo as quantidades recebidas
+    console.log(`Quantidade de subdomínios recebidos para o domínio "${dominio}":`, subdominios.length);
 
     const connection = await this.db.getConnection();
     await connection.beginTransaction();
 
     try {
-      // Limpar todas as tabelas antes de inserir novos dados
-      console.log('Limpando tabelas antes de inserir novos dados...');
-      await connection.execute('SET FOREIGN_KEY_CHECKS = 0');
-      await connection.execute('TRUNCATE TABLE elemento_afetado');
-      await connection.execute('TRUNCATE TABLE violacao');
-      await connection.execute('TRUNCATE TABLE subdominio');
-      await connection.execute('TRUNCATE TABLE dominio');
-      await connection.execute('SET FOREIGN_KEY_CHECKS = 1');
-      console.log('Tabelas limpas com sucesso.');
-
-      // Inserir o domínio
-      console.log('Inserindo domínio:', dominio);
-      const [domainResult] = await connection.execute(
-        'INSERT INTO dominio (url) VALUES (?)',
-        [dominio]
-      );
-      const dominioId = (domainResult as any).insertId;
-      console.log('Domínio inserido com ID:', dominioId);
-
-      // Inserir subdomínios
-      for (const subdominio of subdominios) {
-        const { url, total_elementos_testados, violacoes } = subdominio;
-
-        console.log('Inserindo subdomínio:', url);
-        const nota = this.calcularNotaSubdominio({
-          violacoes,
-          total_elementos_testados,
-        });
-
-        const [subdomainResult] = await connection.execute(
-          'INSERT INTO subdominio (url, nota, total_elementos_testados, dominio_id) VALUES (?, ?, ?, ?)',
-          [url, nota, total_elementos_testados, dominioId]
+        // Verifica se o domínio já existe
+        console.log('Verificando existência do domínio:', dominio);
+        const [existingDomain] = await connection.execute(
+            'SELECT id FROM dominio WHERE url = ?',
+            [dominio]
         );
-        const subdominioId = (subdomainResult as any).insertId;
-        console.log('Subdomínio inserido com ID:', subdominioId);
 
-        // Inserir violações
-        for (const violacao of violacoes) {
-          const {
-            violacao: descricaoViolacao,
-            regra_violada,
-            como_corrigir,
-            mais_informacoes,
-            nivel_impacto,
-            elementos_afetados,
-          } = violacao;
+        if ((existingDomain as any).length > 0) {
+            console.log('Domínio já existe. Deletando domínio e dados relacionados automaticamente.');
 
-          console.log('Inserindo violação:', descricaoViolacao);
-          const [violationResult] = await connection.execute(
-            'INSERT INTO violacao (descricao, regra_violada, como_corrigir, mais_informacoes, nivel_impacto, subdominio_id) VALUES (?, ?, ?, ?, ?, ?)',
-            [
-              descricaoViolacao,
-              regra_violada,
-              como_corrigir,
-              mais_informacoes,
-              nivel_impacto,
-              subdominioId,
-            ]
-          );
-          const violacaoId = (violationResult as any).insertId;
-          console.log('Violação inserida com ID:', violacaoId);
+            // O banco de dados cuidará da exclusão das entradas relacionadas devido ao ON DELETE CASCADE
+            const dominioId = (existingDomain as any)[0].id;
 
-          // Inserir elementos afetados
-          for (const elemento of elementos_afetados) {
-            const { elemento_html, selectores, texto_contexto } = elemento;
-
-            console.log('Inserindo elemento afetado:', elemento_html);
-            await connection.execute(
-              'INSERT INTO elemento_afetado (elemento_html, selectores, texto_contexto, violacao_id) VALUES (?, ?, ?, ?)',
-              [
-                elemento_html,
-                JSON.stringify(selectores),
-                texto_contexto,
-                violacaoId,
-              ]
-            );
-          }
+            // Deletando o domínio, que causará a exclusão de subdomínios, violações e elementos afetados automaticamente
+            await connection.execute('DELETE FROM dominio WHERE id = ?', [dominioId]);
+            console.log('Domínio e dados relacionados deletados automaticamente.');
         }
-      }
 
-      await connection.commit();
-      console.log('Transação concluída com sucesso.');
-      res.status(201).send({ message: 'Domínio salvo com sucesso!' });
+        // Inserir o novo domínio com estado e município
+        console.log('Inserindo domínio:', dominio);
+        const [domainResult] = await connection.execute(
+            'INSERT INTO dominio (url, estado, municipio) VALUES (?, ?, ?)',
+            [dominio, estado, municipio]
+        );
+        const dominioId = (domainResult as any).insertId;
+        console.log('Domínio inserido com ID:', dominioId);
+
+        // Inserir subdomínios
+        for (const subdominio of subdominios) {
+            const { url, total_elementos_testados, violacoes } = subdominio;
+
+            console.log('Verificando se o subdomínio já existe:', url);
+            const [existingSubdomain] = await connection.execute(
+                'SELECT id FROM subdominio WHERE url = ? AND dominio_id = ?',
+                [url, dominioId]
+            );
+
+            if ((existingSubdomain as any).length > 0) {
+                console.log(`Subdomínio "${url}" já existe. Ignorando.`);
+                continue; // Pular para o próximo subdomínio
+            }
+
+            console.log('Inserindo subdomínio:', url);
+            const nota = this.calcularNotaSubdominio({
+                violacoes,
+                total_elementos_testados,
+            });
+
+            const [subdomainResult] = await connection.execute(
+                'INSERT INTO subdominio (url, nota, total_elementos_testados, dominio_id) VALUES (?, ?, ?, ?)',
+                [url, nota, total_elementos_testados, dominioId]
+            );
+            const subdominioId = (subdomainResult as any).insertId;
+      
+
+            // Inserir violações
+            for (const violacao of violacoes) {
+                const {
+                    violacao: descricaoViolacao,
+                    regra_violada,
+                    como_corrigir,
+                    mais_informacoes,
+                    nivel_impacto,
+                    elementos_afetados,
+                } = violacao;
+
+                const [violationResult] = await connection.execute(
+                    'INSERT INTO violacao (descricao, regra_violada, como_corrigir, mais_informacoes, nivel_impacto, subdominio_id) VALUES (?, ?, ?, ?, ?, ?)',
+                    [
+                        descricaoViolacao,
+                        regra_violada,
+                        como_corrigir,
+                        mais_informacoes,
+                        nivel_impacto,
+                        subdominioId,
+                    ]
+                );
+                const violacaoId = (violationResult as any).insertId;
+
+                // Inserir elementos afetados
+                for (const elemento of elementos_afetados) {
+                    const { elemento_html, selectores, texto_contexto } = elemento;
+
+                    await connection.execute(
+                        'INSERT INTO elemento_afetado (elemento_html, selectores, texto_contexto, violacao_id) VALUES (?, ?, ?, ?)',
+                        [
+                            elemento_html,
+                            JSON.stringify(selectores),
+                            texto_contexto,
+                            violacaoId,
+                        ]
+                    );
+                }
+            }
+        }
+
+        await connection.commit();
+        console.log('Transação concluída com sucesso.');
+        res.status(201).send({ message: 'Domínio salvo com sucesso!' });
     } catch (error) {
-      await connection.rollback();
-      console.error('Erro ao salvar domínio:', error);
-      res.status(500).send({ message: 'Erro ao salvar domínio.' });
+        await connection.rollback();
+        console.error('Erro ao salvar domínio:', error);
+        res.status(500).send({ message: 'Erro ao salvar domínio.' });
     } finally {
-      connection.release();
+        connection.release();
     }
-  }
+}
+
+
+  
+  
 
   calcularNotaSubdominio(subdominio: any): number {
     const PESO_IMPACTO: Record<'crítico' | 'grave' | 'moderado' | 'menor', number> = {
       crítico: 7,
       grave: 5,
       moderado: 3,
-      menor: 1,
+      menor: 2,
     };
     const K = 10; // Fator de normalização
-  
+
     let severidadeTotal = 0;
     const violacoes = subdominio.violacoes || [];
     const totalElementosTestados = subdominio.total_elementos_testados || 0;
-  
+
     for (const violacao of violacoes) {
       const nivelImpacto = (violacao.nivel_impacto || '').toLowerCase() as keyof typeof PESO_IMPACTO;
-  
+
       const peso = PESO_IMPACTO[nivelImpacto] || 0;
-  
+
       const elementosAfetados = violacao.elementos_afetados || [];
       const quantidadeElementosAfetados = elementosAfetados.length;
-  
+
       const porcentagemAfetada =
         totalElementosTestados > 0
           ? quantidadeElementosAfetados / totalElementosTestados
           : 0;
-  
+
       severidadeTotal += peso * porcentagemAfetada;
     }
-  
+
     // Calcula a nota como número decimal
     const nota = Math.max(1, 10 - severidadeTotal * K);
-  
+
     // Exibe a nota no console
     console.log(`Nota calculada para o subdomínio: ${nota.toFixed(2)}`);
-  
+
     // Retorna o valor como um número decimal
     return parseFloat(nota.toFixed(2));
   }
+
+
   
 
   async getAllDomains(req: Request, res: Response) {

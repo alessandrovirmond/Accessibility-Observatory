@@ -85,21 +85,35 @@ def testar_acessibilidade(url):
     return relatorio
 
 
-def carregar_relatorio_dominio(dominio):
+def carregar_relatorio_dominio(dominio, estado, municipio):
     dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
     caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
     if os.path.exists(caminho_arquivo):
         with open(caminho_arquivo, 'r', encoding='utf-8') as f:
             return json.load(f)
-    return {"dominio": dominio, "subdominios": []}
+    return {"dominio": dominio, "estado":estado, "municipio": municipio, "subdominios": []}
 
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
+    # Salva o relatório localmente primeiro
+    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
+    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
+    
     try:
-        # Exibe o JSON que será enviado para a API
-        print("=== Relatório de Domínio a ser Enviado ===")
-        print(json.dumps(relatorio_dominio, ensure_ascii=False, indent=4))
+        # Criar diretório, se necessário
+        os.makedirs(os.path.dirname(caminho_arquivo), exist_ok=True)
 
+        # Salvar o JSON no arquivo local
+        with open(caminho_arquivo, 'w', encoding='utf-8') as f:
+            json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
+        print(f"Relatório salvo localmente em: {caminho_arquivo}")
+    except Exception as e:
+        print(f"Erro ao salvar relatório localmente para {dominio}: {e}")
+        registrar_erro_api(dominio)
+    
+    # Enviar relatório para a API
+    try:
+        print("=== Relatório de Domínio a ser Enviado ===")
         print(f"Fazendo post para a API para o domínio: {dominio}")
         response = requests.post(
             'http://localhost:3001/api/domains',
@@ -110,30 +124,11 @@ def salvar_relatorio_dominio(dominio, relatorio_dominio):
         else:
             print(f"Falha ao enviar o relatório para {dominio}. Status Code: {response.status_code}")
             registrar_erro_api(dominio)
-            return
     except Exception as e:
         print(f"Erro ao enviar relatório para {dominio}: {e}")
         registrar_erro_api(dominio)
-        return
-
-    # Salva o relatório localmente
-    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
-    if not os.path.exists('relatorios_dominios'):
-        os.makedirs('relatorios_dominios')
-    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
-    with open(caminho_arquivo, 'w', encoding='utf-8') as f:
-        json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
-    print(f"Relatório salvo localmente para o domínio: {dominio}")
 
 
-
-    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
-    if not os.path.exists('relatorios_dominios'):
-        os.makedirs('relatorios_dominios')
-    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
-    with open(caminho_arquivo, 'w', encoding='utf-8') as f:
-        json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
-    print(f"Relatório salvo localmente para o domínio: {dominio}")
 
 
 def registrar_erro_api(dominio):
@@ -175,10 +170,12 @@ def processar_dominios():
     for index, row in df.iterrows():
         dominio = row['DOMINIO']
         url_subdominio = row['URLS']
+        estado = row['ESTADO']
+        municipio = row['MUNICIPIO']
         status = row['STATUS AXE']
         data_extracao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        print(f"Processando subdomínio {index + 1}/{len(df)}  -  {url_subdominio}")
+        print(f"Processando subdomínio {index + 1}/{len(df)}  -  {url_subdominio} - {municipio}")
 
         if dominio_atual and dominio_atual != dominio:
             salvar_relatorio_dominio(dominio_atual, relatorio_atual)
@@ -190,7 +187,7 @@ def processar_dominios():
         if dominio_atual != dominio:
             dominio_atual = dominio
             try:
-                relatorio_atual = carregar_relatorio_dominio(dominio)
+                relatorio_atual = carregar_relatorio_dominio(dominio, estado, municipio)
             except Exception as ex:
                 print(f"Json corrompido para o subdomínio {url_subdominio}: {ex}")
                 buffer_status.append((index, 'JSON CORROMPIDO'))
