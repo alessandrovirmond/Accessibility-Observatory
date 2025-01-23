@@ -11,7 +11,7 @@ class Config {
   static String estado = "Todos";
   static int id = 0;
   static List<ButtonData> listButton = [
-  ButtonData(label: "RJ", id: 0 , enumReport: EnumReport.domain),
+  
 ];
   static String backend = "http://localhost:3001/api";
 }

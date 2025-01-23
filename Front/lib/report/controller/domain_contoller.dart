@@ -58,6 +58,8 @@ class DomainController implements IReportController {
               final List<String> list = value.split("*&*");
               final int? id = int.tryParse(list[0]);
 
+              Config.estado = list[2];
+
               setReport(
                   id: id ?? 0, enumReport: EnumReport.page, label: list[1]);
 

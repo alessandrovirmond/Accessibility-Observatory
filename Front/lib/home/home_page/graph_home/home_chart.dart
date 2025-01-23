@@ -1,5 +1,7 @@
+import 'package:accessibility_audit/config.dart';
 import 'package:accessibility_audit/home/home_page/graph_home/controller/chart_data.dart';
 import 'package:accessibility_audit/home/home_page/graph_home/controller/home_chart_controller.dart';
+import 'package:accessibility_audit/report/repository/state_repository.dart';
 import 'package:accessibility_audit/uitls/global_pages_utils/custom_button.dart';
 import 'package:accessibility_audit/uitls/global_styles/my_icons.dart';
 import 'package:accessibility_audit/uitls/global_styles/pallete_color.dart';
@@ -19,12 +21,31 @@ class HomeChart extends StatefulWidget {
 
 class _HomeChartState extends State<HomeChart> {
   final HomeChartController controller = HomeChartController();
-
+  bool isLoading = false;
   late Future<Map<String, double>> dataMap;
+  final StateRepository stateRepo = StateRepository();
+  List<String> estados = ["Todos"];
+
+  // Função para pegar os estados e preencher a lista
+  Future<void> _getEstados() async {
+    try {
+      List<String> estadosObtidos = await stateRepo.get();
+      setState(() {
+        estados = ["Todos"] + estadosObtidos;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Erro ao buscar estados: $e');
+    }
+  }
 
   @override
   void initState() {
     dataMap = controller.call();
+    _getEstados();
     super.initState();
   }
 
@@ -36,6 +57,14 @@ class _HomeChartState extends State<HomeChart> {
 
   @override
   Widget build(BuildContext context) {
+
+    
+      if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    
     return LayoutBuilder(
       builder: (context, constraints) {
         final isSmallScreen = constraints.maxWidth < 1200;
@@ -82,16 +111,39 @@ class _HomeChartState extends State<HomeChart> {
                                 ),
                               ),
                               Row(
+                                
                                 children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    color: Colors.blue.shade700,
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        color: Colors.blue.shade700,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        "Nota",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    "Nota",
-                                    style: TextStyle(color: Colors.black),
+                                  SizedBox(width: 50,),
+                                  DropdownButton<String>(
+                                    
+                                    value: Config.estado.isNotEmpty
+                                        ? Config.estado
+                                        : "Todos",
+                                    items: estados.map((String estado) {
+                                      return DropdownMenuItem<String>(
+                                        value: estado,
+                                        child: Text(estado),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      if (newValue != null) {
+                                        Config.estado = newValue;
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
@@ -109,7 +161,8 @@ class _HomeChartState extends State<HomeChart> {
                                 labelStyle: TextStyle(
                                   fontSize: isSmallScreen ? 10 : 12,
                                 ),
-                                labelIntersectAction: AxisLabelIntersectAction.trim,
+                                labelIntersectAction:
+                                    AxisLabelIntersectAction.trim,
                                 majorGridLines: const MajorGridLines(width: 0),
                               ),
                               primaryYAxis: NumericAxis(
@@ -117,25 +170,18 @@ class _HomeChartState extends State<HomeChart> {
                                 labelStyle: const TextStyle(fontSize: 10),
                                 majorTickLines: const MajorTickLines(size: 6),
                                 majorGridLines: const MajorGridLines(width: 0),
-                                numberFormat: NumberFormat('#,##0.00'), // Permite exibição de double
+                                numberFormat: NumberFormat(
+                                    '#,##0.00'), // Permite exibição de double
                                 name: "Nota",
                               ),
-                              axes: <ChartAxis>[
-                                NumericAxis(
-                                  opposedPosition: true,
-                                  labelStyle: const TextStyle(fontSize: 10),
-                                  majorTickLines: const MajorTickLines(size: 6),
-                                  axisLine: const AxisLine(width: 0),
-                                  majorGridLines: const MajorGridLines(width: 0),
-                                  name: "Páginas",
-                                  numberFormat: NumberFormat('#,##0'), // Este eixo pode ser mantido como inteiro
-                                ),
-                              ],
+                              
                               series: [
                                 ColumnSeries<ChartData, String>(
                                   dataSource: createChartData(data),
-                                  xValueMapper: (ChartData data, _) => data.name,
-                                  yValueMapper: (ChartData data, _) => data.value,
+                                  xValueMapper: (ChartData data, _) =>
+                                      data.name,
+                                  yValueMapper: (ChartData data, _) =>
+                                      data.value,
                                   name: "Nota",
                                   color: Colors.blue.shade700,
                                 ),

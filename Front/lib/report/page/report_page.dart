@@ -27,33 +27,41 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> {
   late IReportController controller;
   final StateRepository stateRepo = StateRepository();
-  List<String> estados = ["Todos"]; // Inicia com "Todos"
+  List<String> estados = ["Todos"]; 
+  bool isLoading = true;
 
   // Função para pegar os estados e preencher a lista
   Future<void> _getEstados() async {
     try {
-      // Chama o repositório para obter os estados
+     
       List<String> estadosObtidos = await stateRepo.get();
       setState(() {
-        // Atualiza a lista de estados com os dados obtidos e adiciona "Todos" no final
+        
         estados = ["Todos"] + estadosObtidos;
+         isLoading = false;
       });
     } catch (e) {
+       setState(() {
+        isLoading = false;
+      });
       print('Erro ao buscar estados: $e');
-      // Caso ocorra erro, pode-se adicionar algum fallback ou notificação
+     
     }
   }
 
-  @override
+  
   void setEstado(String estado) {
     setState(() {
       Config.estado = estado;
       Config.enumReport = EnumReport.domain;
       Config.listButton.clear();
+       controller = Config.enumReport.controller;
+      
     });
     _reloadReport();
   }
 
+  @override
   initState() {
     controller = Config.enumReport.controller;
     _getEstados();
@@ -70,15 +78,17 @@ class _ReportPageState extends State<ReportPage> {
     required int id,
     bool add = true,
   }) {
-    // Tratamento para remover ocorrências específicas do label
+
+
+    Config.enumReport = enumReport;
+    Config.id = id;
+
+        // Tratamento para remover ocorrências específicas do label
     final treatedLabel = label
         .replaceAll('http://', '')
         .replaceAll('https://', '')
         .replaceAll('www.', '')
         .replaceAll('.rj.gov.br', '');
-
-    Config.enumReport = enumReport;
-    Config.id = id;
 
     if (add) {
       Config.listButton
@@ -94,6 +104,13 @@ class _ReportPageState extends State<ReportPage> {
     final double hg = MediaQuery.of(context).size.height;
     final double wd = MediaQuery.of(context).size.width;
 
+      if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+
     return Column(
       children: [
         Padding(
@@ -106,8 +123,8 @@ class _ReportPageState extends State<ReportPage> {
                 children: [
                   Container(
                     constraints: const BoxConstraints(
-                      maxWidth: 320, // Limita a largura máxima do botão
-                      minHeight: 40, // Altura mínima
+                      maxWidth: 300, // Limita a largura máxima do botão
+                      maxHeight: 50, // Altura mínima
                     ),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -123,11 +140,8 @@ class _ReportPageState extends State<ReportPage> {
                       ],
                     ),
                     child: DropdownButton<String>(
+                      underline: SizedBox.shrink(),
                       value: Config.estado.isNotEmpty ? Config.estado : "Todos",
-                      hint: const Text(
-                        "Selecione um estado",
-                        style: TextStyle(color: Colors.white),
-                      ),
                       items: estados.map((String estado) {
                         return DropdownMenuItem<String>(
                           value: estado,
@@ -136,7 +150,7 @@ class _ReportPageState extends State<ReportPage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         if (newValue != null) {
-                          setEstado(newValue); // Atualiza o estado e recarrega
+                          setEstado(newValue); 
                         }
                       },
                     ),
@@ -151,7 +165,7 @@ class _ReportPageState extends State<ReportPage> {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 2.0),
+                                const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Icon(
                               Icons.keyboard_arrow_right,
                               size: 20,

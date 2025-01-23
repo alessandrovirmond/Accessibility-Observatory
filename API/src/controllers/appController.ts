@@ -14,6 +14,8 @@ export class DomainController {
   async saveDomain(req: Request, res: Response): Promise<void> {
     const { dominio, subdominios, estado, municipio } = req.body;
 
+/*     this.saveCurrentDate(); */
+
     console.log('Recebendo requisição para salvar domínio:', dominio);
 
     // Exibindo as quantidades recebidas
@@ -183,8 +185,8 @@ export class DomainController {
         SELECT 
           d.id AS dominio_id,
           d.url AS dominio,
-          d.estado, -- Incluindo estado
-          d.municipio, -- Incluindo município
+          d.estado,
+          d.municipio,
           COUNT(DISTINCT s.id) AS total_paginas,
           COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
           CASE 
@@ -213,7 +215,8 @@ export class DomainController {
           INNER JOIN violacao v ON e.violacao_id = v.id
           GROUP BY v.subdominio_id
         ) e ON e.subdominio_id = s.id
-        GROUP BY d.id, d.url, d.estado, d.municipio;
+        GROUP BY d.id, d.url, d.estado, d.municipio
+        ORDER BY nota_dominio DESC;
       `;
   
       const [domains] = await this.db.execute(query);
@@ -225,6 +228,7 @@ export class DomainController {
       res.status(500).send({ message: 'Erro ao obter os domínios.' });
     }
   }
+  
   
 
 
@@ -321,8 +325,6 @@ GROUP BY
 
   async getDomainByState(req: Request, res: Response) {
     let { state } = req.params;
-    
-    // Substitui underscores por espaços
     state = state.replace(/_/g, ' ');
   
     console.warn(`Requisição para obter domínios do estado: ${state}`);
@@ -357,7 +359,8 @@ GROUP BY
           GROUP BY v.subdominio_id
         ) e ON e.subdominio_id = s.id
         WHERE d.estado = ?
-        GROUP BY d.id, d.url;
+        GROUP BY d.id, d.url, d.estado, d.municipio
+        ORDER BY nota_dominio DESC;
       `;
   
       const [domains] = await this.db.execute(query, [state]);

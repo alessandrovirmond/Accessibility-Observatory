@@ -15,6 +15,6 @@ class StateRepository {
     Map<String, dynamic> res =
         await _http.doGet(qsparam: qsparam, path: "/state");
 
-    return res["data"].map<String>((r) => (r)).toList();
+      return res["data"].map<String>((r) => r.toString()).toList();
   }
 }

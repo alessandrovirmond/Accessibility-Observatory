@@ -51,7 +51,7 @@ factory DomainModel.fromJson(Map<String, dynamic> json) {
   PlutoRow toRow() {
     return PlutoRow(
       cells: {
-        'E': PlutoCell(value: "$id*&*$dominio"),
+        'E': PlutoCell(value: "$id*&*$municipio*&*$estado"),
         'Domínio': PlutoCell(value: dominio),
         'Município': PlutoCell(value: municipio),
         'Estado': PlutoCell(value: estado),

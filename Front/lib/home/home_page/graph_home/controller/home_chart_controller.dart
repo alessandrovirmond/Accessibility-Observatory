@@ -22,7 +22,7 @@ class HomeChartController {
    
 
       // Formatar o nome (se necessário)
-      var nomeFormatado = element.municipio;
+      var nomeFormatado = "${element.municipio} - ${element.estado}" ;
 
       // Adicionar os valores ao mapa
       dataMap[nomeFormatado] = element.notaDominio;

@@ -14,7 +14,6 @@ class  PageRepository {
   Future<List<PageModel>> get({Map<String, dynamic>? qsparam, required int id}) async {
     Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "domains/$id/subdomains"); 
 
-    print(res);
 
     return res["data"]
         .map<PageModel>(

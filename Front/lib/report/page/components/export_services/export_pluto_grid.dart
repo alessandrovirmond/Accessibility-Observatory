@@ -14,7 +14,7 @@ class ExportPlutoGrid {
   static void asCsv(PlutoGridStateManager stateManager) {
     var exported = const Utf8Encoder()
         .convert( PlutoGridExport.exportCSV(stateManager));
-    FileSaveHelper.saveAndLaunchFile(exported, "RFIDFácil ${DateTime.now().toIso8601String()}.csv");
+    FileSaveHelper.saveAndLaunchFile(exported, "Observatório de Acessibilidade ${DateTime.now().toIso8601String()}.csv");
   }
 
 
@@ -23,14 +23,14 @@ class ExportPlutoGrid {
 
     var plutoGridPdfExport = PlutoGridDefaultPdfExport(
       title: "RFID Fácil",
-      creator: "RFIDFácil",
+      creator: "Observatório de Acessibilidade",
       format: PdfPageFormat.a3.landscape,
       themeData: themeData,
     );
 
     FileSaveHelper.saveAndLaunchFile(
         await plutoGridPdfExport.export(stateManager),
-        "RFIDFácil ${DateTime.now().toIso8601String()}.pdf");
+        "Observatório de Acessibilidade ${DateTime.now().toIso8601String()}.pdf");
   }
 
 static void asExcel(PlutoGridStateManager stateManager) {
@@ -112,8 +112,8 @@ static void _exportRowsToExcel(List<List<dynamic>> rows, List<dynamic> header, b
   });
 
   // Salva e abre o arquivo Excel.
-  FileSaveHelper.saveAndLaunchFile(excel.encode()!, delete ? "RFIDFácil EXCLUSÃO ${DateTime.now().toIso8601String()}.xlsx" :
-  "RFIDFácil ${DateTime.now().toIso8601String()}.xlsx");
+  FileSaveHelper.saveAndLaunchFile(excel.encode()!, delete ? "Observatório de Acessibilidade EXCLUSÃO ${DateTime.now().toIso8601String()}.xlsx" :
+  "Observatório de Acessibilidade ${DateTime.now().toIso8601String()}.xlsx");
 }
 
 
