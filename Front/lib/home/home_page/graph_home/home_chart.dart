@@ -142,6 +142,7 @@ class _HomeChartState extends State<HomeChart> {
                                     onChanged: (String? newValue) {
                                       if (newValue != null) {
                                         Config.estado = newValue;
+                                        update();
                                       }
                                     },
                                   ),
