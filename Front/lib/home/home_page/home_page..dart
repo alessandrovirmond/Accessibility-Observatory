@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                             "Monitoramento da acessibilidade",
                             style: MyStyles.subBoldBlack,
                           ),
-                          Text(" - 92 sites de prefeitura avaliados"),
+                          Text(" - Sites de prefeitura de todo Brasil avaliados"),
                           Text(
                               " - Avaliação de Acessibilidade de acordo com as normas do WCAG 2.0"),
                           Text(

@@ -1,5 +1,5 @@
 import 'package:accessibility_audit/config.dart';
-import 'package:accessibility_audit/home/components/menu.dart';
+import 'package:accessibility_audit/home/menu/menu.dart';
 import 'package:accessibility_audit/home/enum/enum_home.dart';
 import 'package:accessibility_audit/home/home_page/home_page..dart';
 import 'package:accessibility_audit/report/page/report_page.dart';
