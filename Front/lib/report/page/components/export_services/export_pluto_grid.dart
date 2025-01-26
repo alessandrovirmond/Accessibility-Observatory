@@ -22,7 +22,7 @@ class ExportPlutoGrid {
     final themeData = ThemeData.base();
 
     var plutoGridPdfExport = PlutoGridDefaultPdfExport(
-      title: "RFID Fácil",
+      title: "Observatório de Acessibilidade",
       creator: "Observatório de Acessibilidade",
       format: PdfPageFormat.a3.landscape,
       themeData: themeData,
@@ -89,8 +89,8 @@ static void asExcel(PlutoGridStateManager stateManager) {
 static void _exportRowsToExcel(List<List<dynamic>> rows, List<dynamic> header, bool delete) {
   // Cria um novo arquivo Excel.
   final excel = Excel.createExcel();
-  excel.rename(excel.getDefaultSheet()!, "RFID");
-  final sheet = excel["RFID"];
+  excel.rename(excel.getDefaultSheet()!, "Observatório de Acessibilidade");
+  final sheet = excel["Observatório de Acessibilidade"];
 
 
   // Adiciona o cabeçalho ao Excel (apenas uma vez).

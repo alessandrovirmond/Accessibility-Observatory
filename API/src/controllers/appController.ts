@@ -217,7 +217,6 @@ export class DomainController {
       `;
   
       const [domains] = await this.db.execute(query);
-      console.warn('Domínios recuperados com sucesso:', domains);
   
       res.status(200).json({ data: domains });
     } catch (error) {
@@ -231,7 +230,6 @@ export class DomainController {
 
   async getSubdomainByDomainId(req: Request, res: Response) {
     const id = Number(req.params.id);
-    console.warn('Requisição para obter subdomínios do domínio com ID:', id);
     try {
       // SQL modificado para incluir as informações adicionais
       const [subdomains] = await this.db.execute(
@@ -310,7 +308,7 @@ GROUP BY
         'SELECT * FROM elemento_afetado WHERE violacao_id = ?',
         [id]
       );
-      console.warn('Elementos recuperados com sucesso:', elements);
+
   
       // Retorna os dados dentro de uma chave 'data'
       res.status(200).json({ data: elements });
@@ -362,7 +360,6 @@ GROUP BY
   
       const [domains] = await this.db.execute(query, [state]);
   
-      console.warn('Domínios do estado recuperados com sucesso:', domains);
       res.status(200).json({ data: domains });
     } catch (error) {
       console.error('Erro ao obter domínios por estado:', error);
@@ -437,7 +434,6 @@ GROUP BY
       // Verifica se a consulta retornou resultados e acessa a propriedade 'rows'
       if (Array.isArray(rows)) {
         const estadoList = rows.map((row: any) => row.estado); // Aqui acessa 'estado' de cada linha
-        console.warn('Estados distintos recuperados com sucesso:', estadoList);
         res.status(200).json({ data: estadoList });
       } else {
         res.status(500).send({ message: 'Erro ao processar os dados.' });
@@ -450,21 +446,20 @@ GROUP BY
   }
   
   async getDate(req: Request, res: Response) {
-  
     try {
       const query = `
-       SHOW TABLE STATUS FROM observatorio LIKE 'dominio';
+        SHOW TABLE STATUS FROM observatorio LIKE 'dominio';
       `;
   
-      const [rows] = await this.db.execute(query);
+      const [rows]: any = await this.db.execute(query);
   
-
-        res.status(200).json({ data: rows });
-   
+      // Verifica se existem dados na resposta e obtém a data de atualização
+      const updateTime = rows?.[0]?.Update_time || null;
   
+      res.status(200).json({ data: updateTime });
     } catch (error) {
-      console.error('Erro ao obter estados distintos:', error);
-      res.status(500).send({ message: 'Erro ao obter estados distintos.' });
+      console.error('Erro ao obter a data de atualização:', error);
+      res.status(500).send({ message: 'Erro ao obter a data de atualização.' });
     }
   }
   

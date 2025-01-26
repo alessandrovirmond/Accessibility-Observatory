@@ -19,6 +19,7 @@ class _DateState extends State<Date> {
     try {
       String fetchedDate = await repo.getDate();
       setState(() {
+        print(date);
         date = formatToBrazilianDate( fetchedDate);
         isLoading = false; // Atualiza o estado para indicar que os dados foram carregados
       });
@@ -56,11 +57,4 @@ String formatToBrazilianDate(String isoDate) {
   String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
 
   return formattedDate;
-}
-
-void main() {
-  String isoDate = "2025-01-23T20:15:22.000Z";
-  String brazilianDate = formatToBrazilianDate(isoDate);
-
-  print(brazilianDate); // Saída: 23/01/2025 20:15
 }

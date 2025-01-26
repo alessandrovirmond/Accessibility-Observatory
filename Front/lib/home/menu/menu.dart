@@ -62,47 +62,54 @@ class _MenuState extends State<Menu> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        content: const SingleChildScrollView(
+                        content: SingleChildScrollView(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "Coleta das páginas dos portais municipais",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                  "Utilizando WebScraping, capturou-se o endereço de todas as páginas acessíveis através das páginas principais."),
-                              SizedBox(height: 8),
-                              Text(
-                                "Análise de acessibilidade das páginas",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                  "Com a ferramenta Axe Dev Tools, as páginas foram analisadas conforme os critérios da WCAG 2.1 AA."),
-                              SizedBox(height: 8),
-                              Text(
-                                "Cálculo das notas de acessibilidade das páginas",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                  "A nota é calculada com base na severidade das violações e o impacto dos elementos afetados."),
-                              SizedBox(height: 8),
-                              Text(
-                                "Observatório de Acessibilidade",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                  "Divulgação dos resultados através de gráficos e relatórios detalhados, incluindo notas por portal, páginas e violações."),
-                            ],
-                          ),
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const Text(
+      "Coleta das páginas dos portais municipais",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+    const SizedBox(height: 4),
+    const Text(
+        "Utilizando WebScraping, capturou-se o endereço de todas as páginas acessíveis através das páginas principais."),
+    const SizedBox(height: 8),
+    const Text(
+      "Análise de acessibilidade das páginas",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+    const SizedBox(height: 4),
+    const Text(
+        "Com a ferramenta Axe Dev Tools, as páginas foram analisadas conforme os critérios da WCAG 2.1 AA."),
+    const SizedBox(height: 8),
+    const Text(
+      "Cálculo das notas de acessibilidade das páginas",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+    const SizedBox(height: 4),
+    const Text(
+        "A nota é calculada com base na severidade das violações e o impacto dos elementos afetados."),
+    const SizedBox(height: 8),
+    // Adicionando a imagem
+    Center(
+      child: Image.asset(
+        'assets/image.png', 
+        height: 200,
+        width: 400,
+        fit: BoxFit.cover,
+      ),
+    ),
+    const SizedBox(height: 16),
+    const Text(
+      "Observatório de Acessibilidade",
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+    const SizedBox(height: 4),
+    const Text(
+        "Divulgação dos resultados através de gráficos e relatórios detalhados, incluindo notas por portal, páginas e violações."),
+  ],
+),
+
                         ),
                         actions: [
                           TextButton(

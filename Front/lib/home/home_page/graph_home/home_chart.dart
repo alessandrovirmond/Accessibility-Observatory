@@ -103,7 +103,7 @@ class _HomeChartState extends State<HomeChart> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Notas de Acessibilidade',
+                                'Melhores Notas de Acessibilidade',
                                 style: TextStyle(
                                   fontSize: isSmallScreen ? 20 : 25,
                                   fontWeight: FontWeight.bold,
