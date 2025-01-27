@@ -6,9 +6,9 @@ import { createPool } from 'mysql2/promise';
 const router: Router = express.Router();
 
 const dbPool = createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
+  host: '127.0.0.1',
+  user: 'observatorio',
+  password: 'observatorio',
   database: 'observatorio',
   port: 3306,
   waitForConnections: true,
