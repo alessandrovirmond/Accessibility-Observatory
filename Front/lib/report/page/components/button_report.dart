@@ -25,8 +25,16 @@ class _ButtonReportState extends State<ButtonReport> {
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+        onHover: (action) {
+        setState(() {
+          _isHovered = true;
+        });
+      },
+      onExit: (action) {
+        setState(() {
+          _isHovered = false;
+        });
+      },
       child: GestureDetector(
         onTap: widget.callback,
         child: IntrinsicWidth( // Permite ajustar o tamanho com base no conteúdo
@@ -37,7 +45,7 @@ class _ButtonReportState extends State<ButtonReport> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: _isHovered? Colors.grey.shade200 : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: const [

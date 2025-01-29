@@ -3,6 +3,7 @@ import { Pool } from 'mysql2/promise';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
+
 export class DomainController {
   private db: Pool;
   private DATE_FILE_PATH = join(__dirname, 'date.json');
@@ -13,8 +14,6 @@ export class DomainController {
 
   async saveDomain(req: Request, res: Response): Promise<void> {
     const { dominio, subdominios, estado, municipio } = req.body;
-
-/*     this.saveCurrentDate(); */
 
     console.log('Recebendo requisição para salvar domínio:', dominio);
 
@@ -422,19 +421,6 @@ GROUP BY
     }
   }
 
-   saveCurrentDate(): void {
-    const currentDate = new Date();
-    const formattedDate = currentDate.toLocaleDateString('pt-BR');
-
-    const dateData = {
-      data: formattedDate,
-    };
-
-    // Escrever a data no arquivo JSON
-    writeFileSync(this.DATE_FILE_PATH, JSON.stringify(dateData, null, 2));
-    console.log('Data atual salva com sucesso no arquivo:', dateData);
-  }
-
 
   async getStates(req: Request, res: Response) {
     console.warn('Requisição para obter todos os estados distintos');
@@ -465,21 +451,24 @@ GROUP BY
   }
   
   
+ 
+  async getDate(req: Request, res: Response) {
+    console.warn('Requisição para obter todos os estados distintos');
   
-  getDate(req: Request, res: Response): void {
     try {
-      if (!existsSync(this.DATE_FILE_PATH)) {
-        res.status(404).json({ message: 'Data não encontrada. Salve a data primeiro.' });
-      }
-
-      const dateData = readFileSync(this.DATE_FILE_PATH, 'utf-8');
-      const parsedData = JSON.parse(dateData);
-
-      res.status(200).json({ data: parsedData.data });
+      const query = `
+        SHOW TABLE STATUS FROM observatorio LIKE 'dominio';
+      `;
+  
+      const [rows] = await this.db.execute(query);
+  
+      res.status(200).json({ data: rows });
+  
     } catch (error) {
-      console.error('Erro ao ler a data do arquivo:', error);
-      res.status(500).json({ message: 'Erro ao obter a data.' });
+      console.error('Erro ao obter estados distintos:', error);
+      res.status(500).send({ message: 'Erro ao obter estados distintos.' });
     }
   }
+  
   
 }

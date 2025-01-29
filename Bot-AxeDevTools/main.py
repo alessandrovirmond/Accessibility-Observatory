@@ -95,9 +95,7 @@ def carregar_relatorio_dominio(dominio, estado, municipio):
 
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
-    # Salva o relatório localmente primeiro
-    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
-    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
+
     
     try:
         # Criar diretório, se necessário

@@ -112,7 +112,7 @@ static void _exportRowsToExcel(List<List<dynamic>> rows, List<dynamic> header, b
   });
 
   // Salva e abre o arquivo Excel.
-  FileSaveHelper.saveAndLaunchFile(excel.encode()!, delete ? "Observatório de Acessibilidade EXCLUSÃO ${DateTime.now().toIso8601String()}.xlsx" :
+  FileSaveHelper.saveAndLaunchFile(excel.encode()!, delete ? "Observatório de Acessibilidade ${DateTime.now().toIso8601String()}.xlsx" :
   "Observatório de Acessibilidade ${DateTime.now().toIso8601String()}.xlsx");
 }
 

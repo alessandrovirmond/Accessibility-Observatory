@@ -34,7 +34,7 @@ class _ReportPageState extends State<ReportPage> {
   Future<void> _getEstados() async {
     try {
      
-      List<String> estadosObtidos = await stateRepo.get();
+      List<String> estadosObtidos = await stateRepo.getState();
       setState(() {
         
         estados = ["Todos"] + estadosObtidos;
