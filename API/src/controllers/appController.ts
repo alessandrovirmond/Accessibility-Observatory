@@ -53,6 +53,8 @@ export class DomainController {
         for (const subdominio of subdominios) {
             const { url, total_elementos_testados, violacoes } = subdominio;
 
+            if (!url) continue;
+          
             console.log('Verificando se o subdomínio já existe:', url);
             const [existingSubdomain] = await connection.execute(
                 'SELECT id FROM subdominio WHERE url = ? AND dominio_id = ?',
