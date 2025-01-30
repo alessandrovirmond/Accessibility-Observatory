@@ -148,6 +148,17 @@ class MyStyles {
         width: 1.57),
     borderRadius: const BorderRadius.all(Radius.circular(20)),
   );
+    static const TextStyle subBoldWhite = TextStyle(
+    fontSize: 20, // Tamanho da fonte aumentado
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+
+  static const TextStyle bodyTextLarge = TextStyle(
+    fontSize: 14, // Tamanho da fonte aumentado para o corpo do texto
+    color: Colors.black,
+  );
+
 
   static TextStyle titleGridSmall =
       const TextStyle(fontWeight: FontWeight.bold, fontSize: 17);

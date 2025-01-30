@@ -25,4 +25,23 @@ class  DomainRepository {
             (r) => DomainModel.fromJson(r))
         .toList();
   }
+
+  Future<List<DomainModel>> getAll({Map<String, dynamic>? qsparam}) async {
+
+   
+
+    Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "domains/all"); 
+
+
+    return res["data"]
+        .map<DomainModel>(
+            (r) => DomainModel.fromJson(r))
+        .toList();
+  }
+
+    Future<int> getDomainCount({Map<String, dynamic>? qsparam}) async {
+    // Obtém a quantidade de domínios
+    List<DomainModel> domains = await getAll(qsparam: qsparam);
+    return domains.length;
+  }
 }

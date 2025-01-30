@@ -17,6 +17,7 @@ export class DomainController {
 
     console.log('Recebendo requisição para salvar domínio:', dominio);
 
+
     // Exibindo as quantidades recebidas
     console.log(`Quantidade de subdomínios recebidos para o domínio "${dominio}":`, subdominios.length);
 
@@ -55,6 +56,8 @@ export class DomainController {
         for (const subdominio of subdominios) {
             const { url, total_elementos_testados, violacoes } = subdominio;
 
+            if (!url) continue;
+          
             console.log('Verificando se o subdomínio já existe:', url);
             const [existingSubdomain] = await connection.execute(
                 'SELECT id FROM subdominio WHERE url = ? AND dominio_id = ?',
@@ -219,7 +222,6 @@ export class DomainController {
       `;
   
       const [domains] = await this.db.execute(query);
-      console.warn('Domínios recuperados com sucesso:', domains);
   
       res.status(200).json({ data: domains });
     } catch (error) {
@@ -233,7 +235,6 @@ export class DomainController {
 
   async getSubdomainByDomainId(req: Request, res: Response) {
     const id = Number(req.params.id);
-    console.warn('Requisição para obter subdomínios do domínio com ID:', id);
     try {
       // SQL modificado para incluir as informações adicionais
       const [subdomains] = await this.db.execute(
@@ -312,7 +313,7 @@ GROUP BY
         'SELECT * FROM elemento_afetado WHERE violacao_id = ?',
         [id]
       );
-      console.warn('Elementos recuperados com sucesso:', elements);
+
   
       // Retorna os dados dentro de uma chave 'data'
       res.status(200).json({ data: elements });
@@ -364,7 +365,6 @@ GROUP BY
   
       const [domains] = await this.db.execute(query, [state]);
   
-      console.warn('Domínios do estado recuperados com sucesso:', domains);
       res.status(200).json({ data: domains });
     } catch (error) {
       console.error('Erro ao obter domínios por estado:', error);
@@ -421,6 +421,19 @@ GROUP BY
     }
   }
 
+   saveCurrentDate(): void {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString('pt-BR');
+
+    const dateData = {
+      data: formattedDate,
+    };
+
+    // Escrever a data no arquivo JSON
+    writeFileSync(this.DATE_FILE_PATH, JSON.stringify(dateData, null, 2));
+    console.log('Data atual salva com sucesso no arquivo:', dateData);
+  }
+
 
   async getStates(req: Request, res: Response) {
     console.warn('Requisição para obter todos os estados distintos');
@@ -438,7 +451,6 @@ GROUP BY
       // Verifica se a consulta retornou resultados e acessa a propriedade 'rows'
       if (Array.isArray(rows)) {
         const estadoList = rows.map((row: any) => row.estado); // Aqui acessa 'estado' de cada linha
-        console.warn('Estados distintos recuperados com sucesso:', estadoList);
         res.status(200).json({ data: estadoList });
       } else {
         res.status(500).send({ message: 'Erro ao processar os dados.' });
@@ -451,24 +463,21 @@ GROUP BY
   }
   
   
- 
-  async getDate(req: Request, res: Response) {
-    console.warn('Requisição para obter todos os estados distintos');
   
+  getDate(req: Request, res: Response): void {
     try {
-      const query = `
-        SHOW TABLE STATUS FROM observatorio LIKE 'dominio';
-      `;
-  
-      const [rows] = await this.db.execute(query);
-  
-      res.status(200).json({ data: rows });
-  
+      if (!existsSync(this.DATE_FILE_PATH)) {
+        res.status(404).json({ message: 'Data não encontrada. Salve a data primeiro.' });
+      }
+
+      const dateData = readFileSync(this.DATE_FILE_PATH, 'utf-8');
+      const parsedData = JSON.parse(dateData);
+
+      res.status(200).json({ data: parsedData.data });
     } catch (error) {
-      console.error('Erro ao obter estados distintos:', error);
-      res.status(500).send({ message: 'Erro ao obter estados distintos.' });
+      console.error('Erro ao ler a data do arquivo:', error);
+      res.status(500).json({ message: 'Erro ao obter a data.' });
     }
   }
-  
   
 }

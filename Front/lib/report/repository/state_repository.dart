@@ -15,15 +15,15 @@ class StateRepository {
     Map<String, dynamic> res =
         await _http.doGet(qsparam: qsparam, path: "/state");
 
-      return res["data"].map<String>((r) => r.toString()).toList();
+    return res["data"].map<String>((r) => r.toString()).toList();
   }
 
   Future<String> getDate({Map<String, dynamic>? qsparam}) async {
-    
     Map<String, dynamic> res =
         await _http.doGet(qsparam: qsparam, path: "/date");
-   
 
-      return res["data"][0]["Update_time"].toString();
+    return res["data"][0]["Update_time"].toString();
   }
+
+
 }

@@ -96,6 +96,7 @@ def carregar_relatorio_dominio(dominio, estado, municipio):
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
 
+
     
     try:
         # Criar diretório, se necessário
