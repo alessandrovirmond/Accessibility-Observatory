@@ -13,5 +13,6 @@ class Config {
   static List<ButtonData> listButton = [
   
 ];
-  static String backend = "https://bsi.cefet-rj.br/api_observatorio";
+  //static String backend = "https://bsi.cefet-rj.br/api_observatorio";
+  static String backend = "http://localhost:3001/api";
 }

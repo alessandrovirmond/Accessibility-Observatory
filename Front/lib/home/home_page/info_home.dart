@@ -35,11 +35,12 @@ class _InfoHomeState extends State<InfoHome> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Título Principal • centralizado
@@ -51,29 +52,18 @@ class _InfoHomeState extends State<InfoHome> {
             ),
             const SizedBox(height: 16),
 
-            // Informações com número dinâmico
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    " • $domainCount Sites de prefeitura avaliados",
-                    style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    " • Avaliação de Acessibilidade de acordo com as normas do WCAG 2.0",
-                    style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    " • Nota de acessibilidade considerando grau de impacto das violações no site",
-                    style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                  ),
-                ],
-              ),
+            // Informações principais
+            Wrap(
+              spacing: 16,
+              runSpacing: 8,
+              children: [
+                _buildInfoItem("$domainCount Sites de prefeitura avaliados"),
+                _buildInfoItem("Avaliação de Acessibilidade de acordo com as normas do WCAG 2.0"),
+                _buildInfoItem("Nota de acessibilidade considerando grau de impacto das violações no site"),
+              ],
             ),
-            const SizedBox(height: 16),
+
+            const SizedBox(height: 20),
 
             // Relatórios detalhados • centralizado
             Center(
@@ -84,26 +74,15 @@ class _InfoHomeState extends State<InfoHome> {
             ),
             const SizedBox(height: 8),
 
-            // Detalhes sobre os relatórios
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  " • Páginas do portal municipal",
-                  style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                ),
-                Text(
-                  " • Violações de acessibilidade em cada página",
-                  style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                ),
-                Text(
-                  " • Elementos envolvidos em violações",
-                  style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                ),
-                Text(
-                  " • Filtros e gráficos personalizados",
-                  style: MyStyles.bodyTextLarge, // Aplicando estilo maior
-                ),
+            // Lista de relatórios
+            Wrap(
+              spacing: 16,
+              runSpacing: 8,
+              children: [
+                _buildInfoItem("Páginas do portal municipal"),
+                _buildInfoItem("Violações de acessibilidade em cada página"),
+                _buildInfoItem("Elementos envolvidos em violações"),
+                _buildInfoItem("Filtros e gráficos personalizados"),
               ],
             ),
             const SizedBox(height: 16),
@@ -116,11 +95,11 @@ class _InfoHomeState extends State<InfoHome> {
                   widget.onUpdate();
                 },
                 child: Container(
-                  height: 100,
-                  width: 200,
+                  height: 50,
+                  width: 180,
                   decoration: BoxDecoration(
                     color: Colors.blue.shade700,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Text(
@@ -134,6 +113,22 @@ class _InfoHomeState extends State<InfoHome> {
           ],
         ),
       ),
+    );
+  }
+
+  // Widget para exibir itens de texto formatados corretamente
+  Widget _buildInfoItem(String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("• ", style: TextStyle(fontSize: 16)),
+        Expanded(
+          child: Text(
+            text,
+            style: MyStyles.bodyTextLarge,
+          ),
+        ),
+      ],
     );
   }
 }

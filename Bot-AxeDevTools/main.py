@@ -97,19 +97,34 @@ def carregar_relatorio_dominio(dominio, estado, municipio):
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
 
 
-    
     try:
+        # Normalizar o nome do diretório (remover caracteres inválidos)
+        dominio_normalizado = re.sub(r'[<>:"/\\|?*]', '_', dominio)  # Substitui caracteres inválidos por "_"
+        
         # Criar diretório, se necessário
-        os.makedirs(os.path.dirname(caminho_arquivo), exist_ok=True)
+        diretorio = f"./relatorio/{dominio_normalizado}"
+        os.makedirs(diretorio, exist_ok=True)
+        print(f"Diretório criado/verificado: {diretorio}")
+
+        # Caminho do arquivo JSON
+        caminho_arquivo = f"{diretorio}/relatorio.json"
+        print(f"Caminho do arquivo JSON: {caminho_arquivo}")
+
+        # Verificando se o relatório é um dicionário válido
+        if not isinstance(relatorio_dominio, dict):
+            raise ValueError("relatorio_dominio deve ser um dicionário válido")
 
         # Salvar o JSON no arquivo local
         with open(caminho_arquivo, 'w', encoding='utf-8') as f:
             json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
-        print(f"Relatório salvo localmente em: {caminho_arquivo}")
+
+        print(f"✅ Relatório salvo com sucesso em: {caminho_arquivo}")
+
     except Exception as e:
-        print(f"Erro ao salvar relatório localmente para {dominio}: {e}")
+        print(f"❌ Erro ao salvar relatório localmente para {dominio}: {e}")
         registrar_erro_api(dominio)
-    
+
+
     # Enviar relatório para a API
     try:
         print("=== Relatório de Domínio a ser Enviado ===")

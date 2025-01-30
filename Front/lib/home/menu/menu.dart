@@ -62,54 +62,96 @@ class _MenuState extends State<Menu> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        content: SingleChildScrollView(
+                        content: const SingleChildScrollView(
                           child: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    const Text(
-      "Coleta das páginas dos portais municipais",
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ),
-    const SizedBox(height: 4),
-    const Text(
-        "Utilizando WebScraping, capturou-se o endereço de todas as páginas acessíveis através das páginas principais."),
-    const SizedBox(height: 8),
-    const Text(
-      "Análise de acessibilidade das páginas",
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ),
-    const SizedBox(height: 4),
-    const Text(
-        "Com a ferramenta Axe Dev Tools, as páginas foram analisadas conforme os critérios da WCAG 2.1 AA."),
-    const SizedBox(height: 8),
-    const Text(
-      "Cálculo das notas de acessibilidade das páginas",
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ),
-    const SizedBox(height: 4),
-    const Text(
-        "A nota é calculada com base na severidade das violações e o impacto dos elementos afetados."),
-    const SizedBox(height: 8),
-    // Adicionando a imagem
-    Center(
-      child: Image.asset(
-        'assets/image.png', 
-        height: 200,
-        width: 400,
-        fit: BoxFit.cover,
-      ),
-    ),
-    const SizedBox(height: 16),
-    const Text(
-      "Observatório de Acessibilidade",
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ),
-    const SizedBox(height: 4),
-    const Text(
-        "Divulgação dos resultados através de gráficos e relatórios detalhados, incluindo notas por portal, páginas e violações."),
-  ],
-),
-
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Coleta das páginas dos portais municipais",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                  "Utilizando WebScraping, capturou-se o endereço de todas as páginas acessíveis através das páginas principais."),
+                              SizedBox(height: 8),
+                              Text(
+                                "Análise de acessibilidade das páginas",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                  "Com a ferramenta Axe Dev Tools, as páginas foram analisadas conforme os critérios da WCAG 2.1 AA."),
+                              SizedBox(height: 8),
+                              Text(
+                                "Cálculo das notas de acessibilidade das páginas",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "A nota é calculada com base na severidade das violações e o impacto dos elementos afetados.",
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Aqui está a fórmula escrita de forma que possa ser copiada e colada:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Fórmula do Cálculo da Nota",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Fórmula resumida:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                  "Nota = max(1, 10 - (Severidade Total × K))"),
+                              SizedBox(height: 8),
+                              Text(
+                                "Onde:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Severidade Total = Σ (Peso Impacto da Violação × Porcentagem de Elementos Afetados)",
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Peso Impacto da Violação:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("• Crítico: 7"),
+                              Text("• Grave: 5"),
+                              Text("• Moderado: 3"),
+                              Text("• Menor: 2"),
+                              SizedBox(height: 8),
+                              Text(
+                                "Porcentagem de Elementos Afetados:",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Porcentagem de Elementos Afetados = Elementos Afetados / Total de Elementos Testados",
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "K: Fator de normalização.",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                "Observatório de Acessibilidade",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                  "Divulgação dos resultados através de gráficos e relatórios detalhados, incluindo notas por portal, páginas e violações."),
+                            ],
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -190,7 +232,7 @@ class _MenuState extends State<Menu> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        content:const  SingleChildScrollView(
+                        content: const SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
@@ -199,13 +241,14 @@ class _MenuState extends State<Menu> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16)),
                               SizedBox(height: 8),
-                               Text("Bacharelado em Sistemas de Informação"),
-                               SizedBox(height: 8,),
+                              Text("Bacharelado em Sistemas de Informação"),
+                              SizedBox(
+                                height: 8,
+                              ),
                               Text("CEFET - RJ"),
                               SizedBox(height: 8),
                               Text(
                                   "UNIDADE DE ENSINO DESCENTRALIZADA DE NOVA FRIBURGO/RJ"),
-                             
                               SizedBox(height: 8),
                               Text("Professor Orientador: Nilson Lazarin"),
                               Text("Professor Coorientador: Rafael Scalfoni"),

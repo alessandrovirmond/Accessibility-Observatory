@@ -22,7 +22,7 @@ class StateRepository {
     Map<String, dynamic> res =
         await _http.doGet(qsparam: qsparam, path: "/date");
 
-    return res["data"][0]["Update_time"].toString();
+    return res["data"].toString();
   }
 
 

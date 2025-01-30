@@ -111,7 +111,6 @@ class _HomeChartState extends State<HomeChart> {
                                 ),
                               ),
                               Row(
-                                
                                 children: [
                                   Row(
                                     children: [
