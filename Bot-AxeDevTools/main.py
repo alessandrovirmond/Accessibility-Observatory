@@ -96,7 +96,7 @@ def carregar_relatorio_dominio(dominio, estado, municipio):
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
 
-
+    '''
     try:
         # Normalizar o nome do diretório (remover caracteres inválidos)
         dominio_normalizado = re.sub(r'[<>:"/\\|?*]', '_', dominio)  # Substitui caracteres inválidos por "_"
@@ -123,7 +123,7 @@ def salvar_relatorio_dominio(dominio, relatorio_dominio):
     except Exception as e:
         print(f"❌ Erro ao salvar relatório localmente para {dominio}: {e}")
         registrar_erro_api(dominio)
-
+    '''
 
     # Enviar relatório para a API
     try:
@@ -154,8 +154,6 @@ def registrar_erro_api(dominio):
         print(f"Erro ao registrar o domínio em errosApi.txt: {e}")
 
 
-
-
 def criar_backup(nome_arquivo):
     nome_backup = nome_arquivo.replace('.xlsx', '-backup.xlsx')
     try:
@@ -163,8 +161,6 @@ def criar_backup(nome_arquivo):
         print(f"Backup criado: {nome_backup}")
     except Exception as e:
         print(f"Erro ao criar backup: {e}")
-
-
 
 
 df = pd.read_excel('./insumo-bot-axe.xlsx')

@@ -24,6 +24,7 @@ def esperar_carregamento_completo(driver, timeout=10):
     time.sleep(3)
 
 def extrair_subpaginas(domain):
+    domain = domain.strip() 
     full_url = "https://www." + domain
     driver.get(full_url)
 
@@ -66,10 +67,8 @@ def salvar_subpaginas_excel(pagina, subpaginas, estado, municipio):
         'MUNICIPIO': municipio,
     })
 
-    # Exibir as URLs a serem salvas
-    print("URLs a serem salvas:")
-    for url in subpaginas:
-        print(url)
+    
+    print(f"URLs de {municipio} a serem salvas:", len(subpaginas))
 
     df_final = pd.concat([df_existente, novos_dados], ignore_index=True)
 

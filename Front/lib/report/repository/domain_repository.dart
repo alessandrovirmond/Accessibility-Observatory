@@ -11,13 +11,14 @@ class  DomainRepository {
  
 
   Future<List<DomainModel>> get({Map<String, dynamic>? qsparam}) async {
-
    
     String estado = Config.estado.replaceAll(' ', "_");
+
     if (estado == "Todos"){
       estado = "all";
     }
-    Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "domains/$estado"); 
+
+    Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "graph/$estado"); 
 
 
     return res["data"]

@@ -251,7 +251,7 @@ class _MenuState extends State<Menu> {
                                   "UNIDADE DE ENSINO DESCENTRALIZADA DE NOVA FRIBURGO/RJ"),
                               SizedBox(height: 8),
                               Text("Professor Orientador: Nilson Lazarin"),
-                              Text("Professor Coorientador: Rafael Scalfoni"),
+                              Text("Professor Coorientador: Rafael Escalfoni"),
                               SizedBox(height: 8),
                               Text(
                                 "Alunos:",
