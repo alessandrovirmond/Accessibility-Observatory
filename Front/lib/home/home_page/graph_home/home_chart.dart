@@ -29,7 +29,7 @@ class _HomeChartState extends State<HomeChart> {
   // Função para pegar os estados e preencher a lista
   Future<void> _getEstados() async {
     try {
-      List<String> estadosObtidos = await stateRepo.get();
+      List<String> estadosObtidos = await stateRepo.getState();
       setState(() {
         estados = ["Todos"] + estadosObtidos;
         isLoading = false;
@@ -111,7 +111,6 @@ class _HomeChartState extends State<HomeChart> {
                                 ),
                               ),
                               Row(
-                                
                                 children: [
                                   Row(
                                     children: [

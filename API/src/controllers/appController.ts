@@ -53,6 +53,8 @@ export class DomainController {
         for (const subdominio of subdominios) {
             const { url, total_elementos_testados, violacoes } = subdominio;
 
+            if (!url) continue;
+          
             console.log('Verificando se o subdomínio já existe:', url);
             const [existingSubdomain] = await connection.execute(
                 'SELECT id FROM subdominio WHERE url = ? AND dominio_id = ?',
@@ -299,6 +301,107 @@ GROUP BY
     }
   }
   
+  async getTop10Domains(req: Request, res: Response) {
+    console.warn('Requisição para obter os 10 principais domínios recebida.');
+    try {
+        const query = `
+            SELECT 
+                d.id AS dominio_id,
+                d.url AS dominio,
+                d.estado,
+                d.municipio,
+                COUNT(DISTINCT s.id) AS total_paginas,
+                COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
+                CASE 
+                    WHEN COUNT(DISTINCT s.id) > 0 THEN COALESCE(SUM(v.total_violacoes), 0) / COUNT(DISTINCT s.id)
+                    ELSE 0 
+                END AS media_violacoes_por_pagina,
+                CASE 
+                    WHEN COUNT(DISTINCT s.id) > 0 THEN COALESCE(SUM(e.total_elementos_afetados), 0) / COUNT(DISTINCT s.id)
+                    ELSE 0 
+                END AS media_elementos_afetados_por_pagina,
+                COALESCE(AVG(s.nota), 0) AS nota_dominio
+            FROM dominio d
+            LEFT JOIN subdominio s ON s.dominio_id = d.id
+            LEFT JOIN (
+                SELECT 
+                    subdominio_id,
+                    COUNT(*) AS total_violacoes
+                FROM violacao
+                GROUP BY subdominio_id
+            ) v ON v.subdominio_id = s.id
+            LEFT JOIN (
+                SELECT 
+                    v.subdominio_id,
+                    COUNT(*) AS total_elementos_afetados
+                FROM elemento_afetado e
+                INNER JOIN violacao v ON e.violacao_id = v.id
+                GROUP BY v.subdominio_id
+            ) e ON e.subdominio_id = s.id
+            GROUP BY d.id, d.url, d.estado, d.municipio
+            ORDER BY nota_dominio DESC
+            LIMIT 10;
+        `;
+
+        const [domains] = await this.db.execute(query);
+
+        res.status(200).json({ data: domains });
+    } catch (error) {
+        console.error('Erro ao obter os domínios:', error);
+        res.status(500).send({ message: 'Erro ao obter os domínios.' });
+    }
+}
+
+async getTop10DomainsByState(req: Request, res: Response) {
+    let { state } = req.params;
+    state = state.replace(/_/g, ' ');
+
+    console.warn(`Requisição para obter os 10 principais domínios do estado: ${state}`);
+
+    try {
+        const query = `
+            SELECT 
+                d.id AS dominio_id,
+                d.url AS dominio,
+                d.estado,
+                d.municipio,
+                COUNT(DISTINCT s.id) AS total_paginas,
+                COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
+                COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
+                COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
+                COALESCE(AVG(s.nota), 0) AS nota_dominio
+            FROM dominio d
+            LEFT JOIN subdominio s ON s.dominio_id = d.id
+            LEFT JOIN (
+                SELECT 
+                    subdominio_id,
+                    COUNT(*) AS total_violacoes
+                FROM violacao
+                GROUP BY subdominio_id
+            ) v ON v.subdominio_id = s.id
+            LEFT JOIN (
+                SELECT 
+                    v.subdominio_id,
+                    COUNT(*) AS total_elementos_afetados
+                FROM elemento_afetado e
+                INNER JOIN violacao v ON e.violacao_id = v.id
+                GROUP BY v.subdominio_id
+            ) e ON e.subdominio_id = s.id
+            WHERE d.estado = ?
+            GROUP BY d.id, d.url, d.estado, d.municipio
+            ORDER BY nota_dominio DESC
+            LIMIT 10;
+        `;
+
+        const [domains] = await this.db.execute(query, [state]);
+
+        res.status(200).json({ data: domains });
+    } catch (error) {
+        console.error('Erro ao obter domínios por estado:', error);
+        res.status(500).send({ message: 'Erro ao obter domínios por estado.' });
+    }
+}
+
 
   async getElementsByViolationId(req: Request, res: Response) {
     const id = Number(req.params.id);
@@ -366,55 +469,7 @@ GROUP BY
       res.status(500).send({ message: 'Erro ao obter domínios por estado.' });
     }
   }
-  
 
-
-  async getDomainsGraph(req: Request, res: Response) {
-    console.warn('Requisição para obter os 20 domínios com maiores notas.');
-
-    try {
-      const query = `
-        SELECT 
-          d.id AS dominio_id,
-          d.url AS dominio,
-          d.estado,
-          d.municipio,
-          COUNT(DISTINCT s.id) AS total_paginas,
-          COALESCE(SUM(v.total_violacoes), 0) AS total_violacoes,
-          COALESCE(SUM(v.total_violacoes) / COUNT(DISTINCT s.id), 0) AS media_violacoes_por_pagina,
-          COALESCE(SUM(e.total_elementos_afetados) / COUNT(DISTINCT s.id), 0) AS media_elementos_afetados_por_pagina,
-          COALESCE(AVG(s.nota), 0) AS nota_dominio
-        FROM dominio d
-        LEFT JOIN subdominio s ON s.dominio_id = d.id
-        LEFT JOIN (
-          SELECT 
-            subdominio_id,
-            COUNT(*) AS total_violacoes
-          FROM violacao
-          GROUP BY subdominio_id
-        ) v ON v.subdominio_id = s.id
-        LEFT JOIN (
-          SELECT 
-            v.subdominio_id,
-            COUNT(*) AS total_elementos_afetados
-          FROM elemento_afetado e
-          INNER JOIN violacao v ON e.violacao_id = v.id
-          GROUP BY v.subdominio_id
-        ) e ON e.subdominio_id = s.id
-        GROUP BY d.id, d.url
-        ORDER BY AVG(s.nota) DESC
-        LIMIT 20;
-      `;
-
-      const [domains] = await this.db.execute(query);
-
-      console.warn('Os 20 domínios com maiores notas recuperados com sucesso:', domains);
-      res.status(200).json({ data: domains });
-    } catch (error) {
-      console.error('Erro ao obter os 20 domínios com maiores notas:', error);
-      res.status(500).send({ message: 'Erro ao obter os 20 domínios com maiores notas.' });
-    }
-  }
 
   
 
@@ -461,9 +516,5 @@ GROUP BY
       console.error('Erro ao obter a data de atualização:', error);
       res.status(500).send({ message: 'Erro ao obter a data de atualização.' });
     }
-  }
-  
-  
-  
-  
+  }  
 }

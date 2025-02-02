@@ -7,14 +7,18 @@ const router: Router = express.Router();
 
 const dbPool = createPool({
   host: 'localhost',
-  user: 'root',
-  password: '',
+  user: 'observatorio',
+  password: 'observatorio',
   database: 'observatorio',
+  //user: 'root',
+  //password: '',
   port: 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
+
+
 
 router.use(
   cors({
@@ -38,8 +42,6 @@ router.get('/violations/:id/elements', (req, res) =>
   domainController.getElementsByViolationId(req, res)
 );
 
-
-  // Rota para obter todos os domínios de um estado específico ou todos os domínios
   router.get('/domains/:state', async (req, res) => {
     const { state } = req.params;
 
@@ -47,15 +49,18 @@ router.get('/violations/:id/elements', (req, res) =>
      
       domainController.getAllDomains(req, res);
     }else {
-
       domainController.getDomainByState(req, res);
     }
-
   });
 
-   // Rota para obter os 20 domínios com as maiores notas
-   router.get('/domains/graph', async (req, res) => {
-    domainController.getDomainsGraph(req, res);
+  router.get('/graph/:state', async (req, res) => {
+    const { state } = req.params;
+
+    if (state === 'all') {
+      domainController.getTop10Domains(req, res);
+    }else {
+      domainController.getTop10DomainsByState(req, res);
+    }
   });
 
   router.get('/state', (req, res) =>
