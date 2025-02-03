@@ -25,6 +25,13 @@ chrome_options.add_argument('--disable-extensions')
 chrome_options.add_argument('--headless=new')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--disable-software-rasterizer")
+chrome_options.add_argument("--disable-accelerated-2d-canvas")
+chrome_options.add_argument("--disable-webgl")
+chrome_options.add_argument("--use-gl=swiftshader")
+
+
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.set_script_timeout(300)
@@ -48,63 +55,105 @@ def esperar_carregamento_completo():
 def traduzir_texto(texto):
     return texto
 
-def testar_acessibilidade(url):
+def testar_acessibilidade(url, tentativas=2):
+    global driver  # Para permitir reiniciar se necessário
+    print("Testando subdominio")
     try:
+        if driver.session_id is None:
+            print("Reiniciando o WebDriver...")
+            reiniciar_driver()  # Reinicia o WebDriver caso tenha fechado
+        
         driver.get(url)
         esperar_carregamento_completo()
     except Exception as e:
         print(f"Erro ao carregar a página {url}: {e}")
-        return {"erro": "Timeout ao carregar a página"}
-    
-    axe = Axe(driver)
-    axe.inject()
-    results = axe.run()
+        return {"erro": f"Erro ao carregar a página: {str(e)}"}
 
-    if not results.get("violations"):  # Verificar se há violações
-        print(f"Sem violações encontradas para {url}")
-    
-    total_testados = sum(len(violation["nodes"]) for violation in results.get("violations", []))
-    total_testados += sum(len(passed["nodes"]) for passed in results.get("passes", []))
+    for tentativa in range(tentativas):
+        try:
+            driver.get(url)
+            esperar_carregamento_completo()
+            axe = Axe(driver)
+            axe.inject()
+            results = axe.run()
 
-    # Verificar se o total de elementos testados é maior que zero
-    if total_testados == 0:
-        print(f"Nenhum elemento testado para {url}")
-        return {"erro": "Nenhum elemento testado"}
-    
-    relatorio = {
-        "url": url,
-        "total_elementos_testados": total_testados,
-        "violacoes": []
-    }
+            total_testados = sum(len(violation["nodes"]) for violation in results.get("violations", []))
+            total_testados += sum(len(passed["nodes"]) for passed in results.get("passes", []))
 
-    for violation in results["violations"]:
-        violacao_data = {
-            "violacao": traduzir_texto(violation['description']),
-            "regra_violada": violation['id'],
-            "como_corrigir": traduzir_texto(violation['help']),
-            "mais_informacoes": violation['helpUrl'],
-            "nivel_impacto": traduzir_nivel_impacto(violation['impact']),
-            "elementos_afetados": []
-        }
-        for node in violation["nodes"]:
-            violacao_data["elementos_afetados"].append({
-                "elemento_html": node['html'],
-                "selectores": node['target'],
-                "texto_contexto": traduzir_texto(node['failureSummary'])
-            })
-        relatorio["violacoes"].append(violacao_data)
+            if total_testados == 0:
+                print(f"Nenhum elemento testado para {url}")
+                return {"erro": "Nenhum elemento testado"}
+            
+            relatorio = {
+                "url": url,
+                "total_elementos_testados": total_testados,
+                "violacoes": []
+            }
 
-    return relatorio
+            for violation in results["violations"]:
+                violacao_data = {
+                    "violacao": traduzir_texto(violation['description']),
+                    "regra_violada": violation['id'],
+                    "como_corrigir": traduzir_texto(violation['help']),
+                    "mais_informacoes": violation['helpUrl'],
+                    "nivel_impacto": traduzir_nivel_impacto(violation['impact']),
+                    "elementos_afetados": []
+                }
+                for node in violation["nodes"]:
+                    violacao_data["elementos_afetados"].append({
+                        "elemento_html": node['html'],
+                        "selectores": node['target'],
+                        "texto_contexto": traduzir_texto(node['failureSummary'])
+                    })
+                relatorio["violacoes"].append(violacao_data)
+
+            return relatorio
+        
+        except Exception as e:
+            erro_str = str(e).lower()
+            print(f"Erro ao testar {url}: {e}")
+
+            # Se for um erro de sessão, reinicia o driver
+            if "invalid session id" in erro_str or "session deleted" in erro_str:
+                print("Reiniciando o driver do Selenium...")
+                driver.quit()
+                time.sleep(5)  # Pequena pausa antes de reiniciar
+                driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+            if tentativa + 1 == tentativas:
+                return {"erro": "Falha ao testar acessibilidade após múltiplas tentativas"}
+
+    return {"erro": "Erro inesperado"}
+
+def reiniciar_driver():
+    global driver
+    driver.quit()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.set_script_timeout(300)
+    driver.set_page_load_timeout(120)
 
 def carregar_relatorio_dominio(dominio, estado, municipio):
-    dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
-    caminho_arquivo = f'relatorios_dominios/relatorio_{dominio_sanitizado}.json'
+
+    caminho_arquivo = f'relatorios_dominios/relatorio_{municipio}.json'
+
     if os.path.exists(caminho_arquivo):
-        with open(caminho_arquivo, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {"dominio": dominio, "estado":estado, "municipio": municipio, "subdominios": []}
+        try:
+            with open(caminho_arquivo, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            print(f"Erro ao carregar JSON do domínio {dominio}, arquivo corrompido. Criando novo...")
+
+    return {"dominio": dominio, "estado": estado, "municipio": municipio, "subdominios": []}
+
 
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
+
+
+    if not relatorio_dominio["subdominios"]:
+        print(f"Relatório de {dominio} vazio. Reprocessando antes de enviar...")
+        processar_dominios(dominio)
+        return
+
     try:
         print(f"Enviando relatório para o domínio: {dominio} com {len(relatorio_dominio['subdominios'])} subdomínios.")
         response = requests.post(
@@ -147,6 +196,8 @@ start_time = time.time()
 def processar_dominios():
     global dominio_atual, relatorio_atual, buffer_status, num_urls_processadas, start_time
 
+    total_linhas = len(df)
+
     for index, row in df.iterrows():
         dominio = row['DOMINIO']
         url_subdominio = row['URLS']
@@ -155,7 +206,6 @@ def processar_dominios():
         status = row['STATUS AXE']
         data_extracao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        
         if dominio_atual and dominio_atual != dominio:
             salvar_relatorio_dominio(dominio_atual, relatorio_atual)
             for idx, status_atualizado in buffer_status:
@@ -165,11 +215,11 @@ def processar_dominios():
 
         if dominio_atual != dominio:
             dominio_atual = dominio
+            print(f"Processando domínio: {dominio} ({index + 1}/{total_linhas})")
             try:
                 relatorio_atual = carregar_relatorio_dominio(dominio, estado, municipio)
-                print(f"Relatório carregado para {dominio}")
             except Exception as ex:
-                print(f"Erro ao carregar relatório para o subdomínio {url_subdominio}: {ex}")
+                print(f"Erro ao carregar relatório para {dominio}: {ex}")
                 buffer_status.append((index, 'JSON CORROMPIDO'))
                 continue
 
@@ -183,20 +233,17 @@ def processar_dominios():
         except Exception as e:
             buffer_status.append((index, f'ERRO - {str(e)}'))
 
-        df.at[index, 'DATA TESTE AXE'] = data_extracao
+        df['DATA TESTE AXE'] = df['DATA TESTE AXE'].astype(str)  # Converte toda a coluna para string
         if num_urls_processadas % 30 == 0:
             criar_backup('./insumo-bot-axe.xlsx')
         elapsed_time = time.time() - start_time
         if elapsed_time >= 3600:
             print("Dormindo após uma hora....")
-            time.sleep(600)
+            time.sleep(10)
             start_time = time.time()
 
     if dominio_atual:
         salvar_relatorio_dominio(dominio_atual, relatorio_atual)
-        for idx, status_atualizado in buffer_status:
-            df.at[idx, 'STATUS AXE'] = status_atualizado
-        df.to_excel('./insumo-bot-axe.xlsx', index=False)
 
 processar_dominios()
 
