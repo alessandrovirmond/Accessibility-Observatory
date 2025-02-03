@@ -7,11 +7,11 @@ const router: Router = express.Router();
 
 const dbPool = createPool({
   host: 'localhost',
-  user: 'observatorio',
-  password: 'observatorio',
+  //user: 'observatorio',
+  //password: 'observatorio',
   database: 'observatorio',
-  //user: 'root',
-  //password: '',
+  user: 'root',
+  password: '',
   port: 3306,
   waitForConnections: true,
   connectionLimit: 10,

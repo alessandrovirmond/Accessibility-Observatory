@@ -10,7 +10,7 @@ class  DomainRepository {
       HttpRequest();
  
 
-  Future<List<DomainModel>> get({Map<String, dynamic>? qsparam}) async {
+  Future<List<DomainModel>> getGraph({Map<String, dynamic>? qsparam}) async {
    
     String estado = Config.estado.replaceAll(' ', "_");
 
@@ -27,7 +27,7 @@ class  DomainRepository {
         .toList();
   }
 
-  Future<List<DomainModel>> getAll({Map<String, dynamic>? qsparam}) async {
+  Future<List<DomainModel>> getAllDomains({Map<String, dynamic>? qsparam}) async {
 
    
 
@@ -42,7 +42,7 @@ class  DomainRepository {
 
     Future<int> getDomainCount({Map<String, dynamic>? qsparam}) async {
     // Obtém a quantidade de domínios
-    List<DomainModel> domains = await getAll(qsparam: qsparam);
+    List<DomainModel> domains = await getAllDomains(qsparam: qsparam);
     return domains.length;
   }
 }

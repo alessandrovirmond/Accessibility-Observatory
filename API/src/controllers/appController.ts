@@ -23,7 +23,6 @@ export class DomainController {
 
     try {
         // Verifica se o domínio já existe
-        console.log('Verificando existência do domínio:', dominio);
         const [existingDomain] = await connection.execute(
             'SELECT id FROM dominio WHERE url = ?',
             [dominio]
@@ -41,13 +40,13 @@ export class DomainController {
         }
 
         // Inserir o novo domínio com estado e município
-        console.log('Inserindo domínio:', dominio);
+
         const [domainResult] = await connection.execute(
             'INSERT INTO dominio (url, estado, municipio) VALUES (?, ?, ?)',
             [dominio, estado, municipio]
         );
         const dominioId = (domainResult as any).insertId;
-        console.log('Domínio inserido com ID:', dominioId);
+        
 
         // Inserir subdomínios
         for (const subdominio of subdominios) {
@@ -55,7 +54,7 @@ export class DomainController {
 
             if (!url) continue;
           
-            console.log('Verificando se o subdomínio já existe:', url);
+         
             const [existingSubdomain] = await connection.execute(
                 'SELECT id FROM subdominio WHERE url = ? AND dominio_id = ?',
                 [url, dominioId]
@@ -66,7 +65,7 @@ export class DomainController {
                 continue; // Pular para o próximo subdomínio
             }
 
-            console.log('Inserindo subdomínio:', url);
+   
             const nota = this.calcularNotaSubdominio({
                 violacoes,
                 total_elementos_testados,
@@ -168,8 +167,6 @@ export class DomainController {
     // Calcula a nota como número decimal
     const nota = Math.max(1, 10 - severidadeTotal * K);
 
-    // Exibe a nota no console
-    console.log(`Nota calculada para o subdomínio: ${nota.toFixed(2)}`);
 
     // Retorna o valor como um número decimal
     return parseFloat(nota.toFixed(2));
@@ -253,9 +250,7 @@ export class DomainController {
       `,
         [id]
       );
-      
-      // Log da consulta para depuração
-      console.warn('Subdomínios com informações adicionais recuperados com sucesso:', subdomains);
+
       
       // Retorna os dados dentro de uma chave 'data'
       res.status(200).json({ data: subdomains });

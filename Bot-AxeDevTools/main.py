@@ -12,32 +12,25 @@ import time
 import re
 import shutil
 import requests
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-
+# Configurações do Chrome
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--ssl-version-min=tls1.2')
 chrome_options.add_argument('--allow-insecure-localhost')
-# chrome_options.add_argument('--blink-settings=imagesEnabled=false')
-# chrome_options.add_argument('--disable-javascript')
 chrome_options.add_argument('--disable-extensions')
 chrome_options.add_argument('--headless=new')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
-# chrome_options.add_argument('--disable-features=ScriptStreaming')
-
-
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.set_script_timeout(300)
 driver.set_page_load_timeout(120)
 
-
 translator = Translator()
-
-
-def traduzir_texto(texto):
-    return texto
 
 impact_translation = {
     "minor": "menor",
@@ -49,23 +42,41 @@ impact_translation = {
 def traduzir_nivel_impacto(nivel):
     return impact_translation.get(nivel, nivel)
 
+def esperar_carregamento_completo():
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+
+def traduzir_texto(texto):
+    return texto
 
 def testar_acessibilidade(url):
     try:
         driver.get(url)
+        esperar_carregamento_completo()
     except Exception as e:
         print(f"Erro ao carregar a página {url}: {e}")
         return {"erro": "Timeout ao carregar a página"}
+    
     axe = Axe(driver)
     axe.inject()
     results = axe.run()
+
+    if not results.get("violations"):  # Verificar se há violações
+        print(f"Sem violações encontradas para {url}")
+    
     total_testados = sum(len(violation["nodes"]) for violation in results.get("violations", []))
     total_testados += sum(len(passed["nodes"]) for passed in results.get("passes", []))
+
+    # Verificar se o total de elementos testados é maior que zero
+    if total_testados == 0:
+        print(f"Nenhum elemento testado para {url}")
+        return {"erro": "Nenhum elemento testado"}
+    
     relatorio = {
         "url": url,
         "total_elementos_testados": total_testados,
         "violacoes": []
     }
+
     for violation in results["violations"]:
         violacao_data = {
             "violacao": traduzir_texto(violation['description']),
@@ -82,8 +93,8 @@ def testar_acessibilidade(url):
                 "texto_contexto": traduzir_texto(node['failureSummary'])
             })
         relatorio["violacoes"].append(violacao_data)
-    return relatorio
 
+    return relatorio
 
 def carregar_relatorio_dominio(dominio, estado, municipio):
     dominio_sanitizado = re.sub(r'[^\w\-]', '_', dominio)
@@ -93,42 +104,9 @@ def carregar_relatorio_dominio(dominio, estado, municipio):
             return json.load(f)
     return {"dominio": dominio, "estado":estado, "municipio": municipio, "subdominios": []}
 
-
 def salvar_relatorio_dominio(dominio, relatorio_dominio):
-
-    '''
     try:
-        # Normalizar o nome do diretório (remover caracteres inválidos)
-        dominio_normalizado = re.sub(r'[<>:"/\\|?*]', '_', dominio)  # Substitui caracteres inválidos por "_"
-        
-        # Criar diretório, se necessário
-        diretorio = f"./relatorio/{dominio_normalizado}"
-        os.makedirs(diretorio, exist_ok=True)
-        print(f"Diretório criado/verificado: {diretorio}")
-
-        # Caminho do arquivo JSON
-        caminho_arquivo = f"{diretorio}/relatorio.json"
-        print(f"Caminho do arquivo JSON: {caminho_arquivo}")
-
-        # Verificando se o relatório é um dicionário válido
-        if not isinstance(relatorio_dominio, dict):
-            raise ValueError("relatorio_dominio deve ser um dicionário válido")
-
-        # Salvar o JSON no arquivo local
-        with open(caminho_arquivo, 'w', encoding='utf-8') as f:
-            json.dump(relatorio_dominio, f, ensure_ascii=False, indent=4)
-
-        print(f"✅ Relatório salvo com sucesso em: {caminho_arquivo}")
-
-    except Exception as e:
-        print(f"❌ Erro ao salvar relatório localmente para {dominio}: {e}")
-        registrar_erro_api(dominio)
-    '''
-
-    # Enviar relatório para a API
-    try:
-        print("=== Relatório de Domínio a ser Enviado ===")
-        print(f"Fazendo post para a API para o domínio: {dominio}")
+        print(f"Enviando relatório para o domínio: {dominio} com {len(relatorio_dominio['subdominios'])} subdomínios.")
         response = requests.post(
             'http://localhost:3001/api/domains',
             json=relatorio_dominio
@@ -142,9 +120,6 @@ def salvar_relatorio_dominio(dominio, relatorio_dominio):
         print(f"Erro ao enviar relatório para {dominio}: {e}")
         registrar_erro_api(dominio)
 
-
-
-
 def registrar_erro_api(dominio):
     try:
         with open('errosApi.txt', 'a', encoding='utf-8') as f:
@@ -153,26 +128,21 @@ def registrar_erro_api(dominio):
     except Exception as e:
         print(f"Erro ao registrar o domínio em errosApi.txt: {e}")
 
-
 def criar_backup(nome_arquivo):
     nome_backup = nome_arquivo.replace('.xlsx', '-backup.xlsx')
     try:
         shutil.copy(nome_arquivo, nome_backup)
-        print(f"Backup criado: {nome_backup}")
     except Exception as e:
         print(f"Erro ao criar backup: {e}")
 
-
 df = pd.read_excel('./insumo-bot-axe.xlsx')
 df['STATUS AXE'] = df['STATUS AXE'].astype(str)
-
 
 num_urls_processadas = 0
 dominio_atual = None
 relatorio_atual = None
 buffer_status = []
 start_time = time.time()
-
 
 def processar_dominios():
     global dominio_atual, relatorio_atual, buffer_status, num_urls_processadas, start_time
@@ -185,8 +155,7 @@ def processar_dominios():
         status = row['STATUS AXE']
         data_extracao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        print(f"Processando subdomínio {index + 1}/{len(df)}  -  {url_subdominio} - {municipio}")
-
+        
         if dominio_atual and dominio_atual != dominio:
             salvar_relatorio_dominio(dominio_atual, relatorio_atual)
             for idx, status_atualizado in buffer_status:
@@ -198,33 +167,30 @@ def processar_dominios():
             dominio_atual = dominio
             try:
                 relatorio_atual = carregar_relatorio_dominio(dominio, estado, municipio)
+                print(f"Relatório carregado para {dominio}")
             except Exception as ex:
-                print(f"Json corrompido para o subdomínio {url_subdominio}: {ex}")
+                print(f"Erro ao carregar relatório para o subdomínio {url_subdominio}: {ex}")
                 buffer_status.append((index, 'JSON CORROMPIDO'))
                 continue
 
-        if 1 == 1:
-            time.sleep(2)
-            num_urls_processadas += 1
-            try:
-                resultado = testar_acessibilidade(url_subdominio)
+        try:
+            resultado = testar_acessibilidade(url_subdominio)
+            if "erro" not in resultado:
                 relatorio_atual["subdominios"].append(resultado)
                 buffer_status.append((index, 'SUCESSO'))
-            except Exception as e:
-                print(f"Erro ao processar o subdomínio {url_subdominio}: {e}")
-                error_message = str(e)
-                buffer_status.append((index, f'ERRO - {error_message}'))
+            else:
+                buffer_status.append((index, f'ERRO - {resultado["erro"]}'))
+        except Exception as e:
+            buffer_status.append((index, f'ERRO - {str(e)}'))
 
-            df.at[index, 'DATA TESTE AXE'] = data_extracao
-
-            if num_urls_processadas % 30 == 0:
-                criar_backup('./insumo-bot-axe.xlsx')
-
-            elapsed_time = time.time() - start_time
-            # if elapsed_time >= 3600:
-            #     print("Dormindo após uma hora....")
-            #     time.sleep(6000)
-            #     start_time = time.time()
+        df.at[index, 'DATA TESTE AXE'] = data_extracao
+        if num_urls_processadas % 30 == 0:
+            criar_backup('./insumo-bot-axe.xlsx')
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= 3600:
+            print("Dormindo após uma hora....")
+            time.sleep(600)
+            start_time = time.time()
 
     if dominio_atual:
         salvar_relatorio_dominio(dominio_atual, relatorio_atual)

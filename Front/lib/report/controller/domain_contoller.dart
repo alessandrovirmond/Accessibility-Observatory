@@ -28,7 +28,7 @@ class DomainController implements IReportController {
   Future<List<PlutoRow>> getRows({required int id}) async {
     isGraphActive.value = false;
 
-    final List<DomainModel> response = await _repository.get();
+    final List<DomainModel> response = await _repository.getAllDomains();
 
     return response.map((r) => r.toRow()).toList();
   }
@@ -82,7 +82,22 @@ class DomainController implements IReportController {
           title: "Município",
           field: "Município",
           type: PlutoColumnType.text(),
-          width: 180),
+          width: 180,
+           footerRenderer: (context) => PlutoAggregateColumnFooter(
+        rendererContext: context,
+        formatAsCurrency: false,
+        type: PlutoAggregateColumnType.count,
+        alignment: Alignment.centerLeft,
+        titleSpanBuilder: (text) {
+          return [
+            const TextSpan(
+              text: 'QNT:  ',
+              style: TextStyle(color: Colors.red),
+            ),
+            TextSpan(text: text.replaceAll('\$', "").replaceAll(",", ".")),
+          ];
+        },
+      ),),
       PlutoColumn(
           title: "Domínio",
           field: "Domínio",

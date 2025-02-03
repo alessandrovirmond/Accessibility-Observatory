@@ -13,7 +13,7 @@ class HomeChartController {
 
   Future<Map<String, double>> call() async {
 
-    List<DomainModel> list = await _repo.get();
+    List<DomainModel> list = await _repo.getGraph();
 
     dataMap.clear();
 
