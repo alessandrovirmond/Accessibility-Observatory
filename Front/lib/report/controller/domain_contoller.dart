@@ -77,13 +77,8 @@ class DomainController implements IReportController {
           title: "Estado",
           field: "Estado",
           type: PlutoColumnType.text(),
-          width: 180),
-      PlutoColumn(
-          title: "Município",
-          field: "Município",
-          type: PlutoColumnType.text(),
           width: 180,
-           footerRenderer: (context) => PlutoAggregateColumnFooter(
+            footerRenderer: (context) => PlutoAggregateColumnFooter(
         rendererContext: context,
         formatAsCurrency: false,
         type: PlutoAggregateColumnType.count,
@@ -98,6 +93,12 @@ class DomainController implements IReportController {
           ];
         },
       ),),
+      PlutoColumn(
+          title: "Município",
+          field: "Município",
+          type: PlutoColumnType.text(),
+          width: 180,
+         ),
       PlutoColumn(
           title: "Domínio",
           field: "Domínio",

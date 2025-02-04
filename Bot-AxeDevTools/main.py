@@ -16,26 +16,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Configurações do Chrome
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
-chrome_options.add_argument('--ssl-version-min=tls1.2')
-chrome_options.add_argument('--allow-insecure-localhost')
 chrome_options.add_argument('--disable-extensions')
 chrome_options.add_argument('--headless=new')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--disable-infobars")
+chrome_options.add_argument("--incognito")
 chrome_options.add_argument("--disable-software-rasterizer")
-chrome_options.add_argument("--disable-accelerated-2d-canvas")
-chrome_options.add_argument("--disable-webgl")
-chrome_options.add_argument("--use-gl=swiftshader")
+
+
+
 
 
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-driver.set_script_timeout(300)
-driver.set_page_load_timeout(120)
+driver.set_script_timeout(400)
+driver.set_page_load_timeout(200)
 
 translator = Translator()
 
@@ -57,17 +56,13 @@ def traduzir_texto(texto):
 
 def testar_acessibilidade(url, tentativas=2):
     global driver  # Para permitir reiniciar se necessário
-    print("Testando subdominio")
-    try:
-        if driver.session_id is None:
-            print("Reiniciando o WebDriver...")
-            reiniciar_driver()  # Reinicia o WebDriver caso tenha fechado
-        
-        driver.get(url)
-        esperar_carregamento_completo()
-    except Exception as e:
-        print(f"Erro ao carregar a página {url}: {e}")
-        return {"erro": f"Erro ao carregar a página: {str(e)}"}
+    print("Testando subdominio: ", url)
+
+    # Verifica se a sessão ainda está ativa antes de tentar navegar
+    if driver.session_id is None:
+        print("Sessão do WebDriver inválida. Reiniciando...")
+        reiniciar_driver()
+
 
     for tentativa in range(tentativas):
         try:
@@ -127,10 +122,16 @@ def testar_acessibilidade(url, tentativas=2):
 
 def reiniciar_driver():
     global driver
-    driver.quit()
+    try:
+        driver.quit()
+    except Exception:
+        pass  # Ignora erros ao fechar o driver
+
+    time.sleep(2)  # Pequena pausa para evitar conflitos
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    driver.set_script_timeout(300)
-    driver.set_page_load_timeout(120)
+    driver.set_script_timeout(400)
+    driver.set_page_load_timeout(200)
+
 
 def carregar_relatorio_dominio(dominio, estado, municipio):
 
@@ -193,13 +194,16 @@ relatorio_atual = None
 buffer_status = []
 start_time = time.time()
 
-def processar_dominios():
+def processar_dominios(dominio_especifico=None):
     global dominio_atual, relatorio_atual, buffer_status, num_urls_processadas, start_time
 
     total_linhas = len(df)
 
     for index, row in df.iterrows():
         dominio = row['DOMINIO']
+        if dominio_especifico and dominio != dominio_especifico:
+            continue  # Pula domínios que não são o especificado
+
         url_subdominio = row['URLS']
         estado = row['ESTADO']
         municipio = row['MUNICIPIO']
@@ -244,6 +248,7 @@ def processar_dominios():
 
     if dominio_atual:
         salvar_relatorio_dominio(dominio_atual, relatorio_atual)
+
 
 processar_dominios()
 
