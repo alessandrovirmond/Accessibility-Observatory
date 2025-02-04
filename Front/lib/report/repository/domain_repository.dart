@@ -31,7 +31,15 @@ class  DomainRepository {
 
    
 
-    Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "domains/all"); 
+    
+    String estado = Config.estado.replaceAll(' ', "_");
+
+    if (estado == "Todos"){
+      estado = "all";
+    }
+
+    Map<String, dynamic> res = await _http.doGet(qsparam: qsparam, path: "domains/$estado"); 
+
 
 
     return res["data"]
