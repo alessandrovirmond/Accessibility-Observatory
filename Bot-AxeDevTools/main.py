@@ -31,7 +31,9 @@ chrome_options.add_argument("--disable-accelerated-2d-canvas")
 chrome_options.add_argument("--disable-webgl")
 chrome_options.add_argument("--use-gl=swiftshader")
 
-
+def iniciar_driver():
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)\
+    
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 driver.set_script_timeout(300)
 driver.set_page_load_timeout(120)
@@ -60,10 +62,26 @@ def esperar_carregamento_completo():
     except Exception:
         print("Tempo limite atingido ao carregar a página. Pulando para a próxima.")
         raise TimeoutError("Tempo limite atingido ao carregar a página")
+    
+def verificar_driver():
+    """ Verifica se o WebDriver está ativo e reinicia se necessário. """
+    global driver
+    try:
+        # Testa se a sessão ainda está ativa tentando executar um script simples
+        driver.execute_script("return document.readyState")  
+        driver.title  
+    except Exception:
+        print("❌ Sessão inválida. Reiniciando WebDriver...")
+        reiniciar_driver()
+
+
 
 def testar_acessibilidade(url, tentativas=2):
     global driver
     print(f"Testando subdominio {url}")
+
+    verificar_driver()
+
     try:
         if driver.session_id is None:
             print("Reiniciando o WebDriver...")
@@ -71,11 +89,16 @@ def testar_acessibilidade(url, tentativas=2):
         
         driver.get(url)
         esperar_carregamento_completo()
-    except TimeoutError:
-        return {"erro": "Tempo limite atingido ao carregar a página"}
     except Exception as e:
-        print(f"Erro ao carregar a página {url}: {e}")
-        return {"erro": f"Erro ao carregar a página: {str(e)}"}
+            erro_str = str(e).lower()
+            print(f"❌ Erro ao testar {url}: {e}")
+
+            if "invalid session id" in erro_str or "session deleted" in erro_str:
+                print("🔄 Reiniciando o WebDriver...")
+                verificar_driver()
+
+            if tentativa + 1 == tentativas:
+                return {"erro": "Falha ao testar acessibilidade após múltiplas tentativas"}
     
     for tentativa in range(tentativas):
         try:
@@ -136,11 +159,19 @@ def testar_acessibilidade(url, tentativas=2):
 
 
 def reiniciar_driver():
+    """ Reinicia o WebDriver do Selenium. """
     global driver
-    driver.quit()
+    print("🔄 Reiniciando o WebDriver...")
+    try:
+        driver.quit()
+    except Exception:
+        pass  # Ignora erros ao tentar fechar o driver
+
+    time.sleep(5)  # Aguarda antes de reiniciar para evitar conflitos
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.set_script_timeout(300)
     driver.set_page_load_timeout(120)
+
 
 def carregar_relatorio_dominio(dominio, estado, municipio):
 
