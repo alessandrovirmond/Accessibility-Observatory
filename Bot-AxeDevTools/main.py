@@ -49,25 +49,34 @@ def traduzir_nivel_impacto(nivel):
     return impact_translation.get(nivel, nivel)
 
 def esperar_carregamento_completo():
-    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+    WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
 
 def traduzir_texto(texto):
     return texto
 
+def esperar_carregamento_completo():
+    try:
+        WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+    except Exception:
+        print("Tempo limite atingido ao carregar a página. Pulando para a próxima.")
+        raise TimeoutError("Tempo limite atingido ao carregar a página")
+
 def testar_acessibilidade(url, tentativas=2):
-    global driver  # Para permitir reiniciar se necessário
-    print("Testando subdominio")
+    global driver
+    print(f"Testando subdominio {url}")
     try:
         if driver.session_id is None:
             print("Reiniciando o WebDriver...")
-            reiniciar_driver()  # Reinicia o WebDriver caso tenha fechado
+            reiniciar_driver()
         
         driver.get(url)
         esperar_carregamento_completo()
+    except TimeoutError:
+        return {"erro": "Tempo limite atingido ao carregar a página"}
     except Exception as e:
         print(f"Erro ao carregar a página {url}: {e}")
         return {"erro": f"Erro ao carregar a página: {str(e)}"}
-
+    
     for tentativa in range(tentativas):
         try:
             driver.get(url)
@@ -108,21 +117,23 @@ def testar_acessibilidade(url, tentativas=2):
 
             return relatorio
         
+        except TimeoutError:
+            return {"erro": "Tempo limite atingido ao carregar a página"}
         except Exception as e:
             erro_str = str(e).lower()
             print(f"Erro ao testar {url}: {e}")
 
-            # Se for um erro de sessão, reinicia o driver
             if "invalid session id" in erro_str or "session deleted" in erro_str:
                 print("Reiniciando o driver do Selenium...")
                 driver.quit()
-                time.sleep(5)  # Pequena pausa antes de reiniciar
+                time.sleep(5)
                 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
             if tentativa + 1 == tentativas:
                 return {"erro": "Falha ao testar acessibilidade após múltiplas tentativas"}
 
     return {"erro": "Erro inesperado"}
+
 
 def reiniciar_driver():
     global driver
@@ -149,8 +160,7 @@ def salvar_relatorio_dominio(dominio, relatorio_dominio):
 
 
     if not relatorio_dominio["subdominios"]:
-        print(f"Relatório de {dominio} vazio. Reprocessando antes de enviar...")
-        processar_dominios(dominio)
+        print(f"Relatório de {dominio} vazio.")
         return
 
     try:
