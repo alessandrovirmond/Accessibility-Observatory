@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e  # Para o script se algo falhar
+set -e  
 
 clear
 echo "🔧 Iniciando setup do ambiente..."
