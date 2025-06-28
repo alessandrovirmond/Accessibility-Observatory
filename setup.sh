@@ -50,6 +50,23 @@ else
     echo "✅ Google Chrome já instalado: $(google-chrome --version)"
 fi
 
-echo "🎉 Ambiente pronto! Para executar seu projeto:"
+if ! command -v npm &> /dev/null; then
+    echo "📦 Instalando npm..."
+    sudo apt install -y npm
+else
+    echo "✅ npm já instalado: $(npm -v)"
+fi
+
+
+if [ -d "API" ]; then
+    echo "📂 Instalando dependências Node.js em ./api..."
+    cd ./API
+    npm install
+    cd ..
+else
+    echo "⚠️ Pasta 'api' não encontrada. Pulei o npm install."
+fi
+
+echo "✅ Setup concluído!"
 echo "👉 Ative o ambiente com: source venv/bin/activate"
 echo "👉 Depois rode: ./run.sh"
