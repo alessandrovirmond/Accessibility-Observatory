@@ -68,5 +68,5 @@ else
 fi
 
 echo "✅ Setup concluído!"
-echo "👉 Ative o ambiente com: source venv/bin/activate"
+echo "👉 Preencha o arquivo excel do bot de varredura"
 echo "👉 Depois rode: ./run.sh"
