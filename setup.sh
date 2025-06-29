@@ -19,6 +19,12 @@ if ! python3 -m venv --help &> /dev/null; then
 fi
 
 
+if ! command -v pip &> /dev/null; then
+    echo "⏳ Instalando python3-pip..."
+    sudo apt update
+    sudo apt install -y python3-pip
+fi
+
 if [ ! -d "venv" ]; then
     echo "📦 Criando ambiente virtual 'venv'..."
     python3 -m venv venv
