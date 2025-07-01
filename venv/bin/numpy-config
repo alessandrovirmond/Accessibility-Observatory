@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/user/Área de trabalho/Resende_Virmond_2025/venv/bin/python3" "$0" "$@"
-' '''
+#!/home/user/Documentos/accessibility-testing-bot/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
