@@ -21,13 +21,15 @@ else
 fi
 
 
-if ! python3 -m venv --help &> /dev/null; then
-    echo "⏳ Instalando python3-venv..."
+
+if ! python3.12 -m venv --help &> /dev/null; then
+    echo "⏳ Instalando python3.12-venv..."
     sudo apt update
-    sudo apt install -y python3-venv
+    sudo apt install -y python3.12-venv
 else
-    echo "✅ python3-venv já instalado."
+    echo "✅ python3.12-venv já instalado."
 fi
+
 
 
 if ! command -v pip3 &> /dev/null; then
