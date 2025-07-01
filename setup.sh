@@ -115,7 +115,6 @@ fi
 
 
 echo "✅ Setup concluído!"
-echo "ℹ️ Para usar o ambiente virtual Python depois, ative-o com: source venv/bin/activate"
 echo "👉 Preencha o arquivo Excel do bot de varredura"
 echo "👉 Entre na pasta ./API e rode o comando: npm run dev"
 echo "👉 Depois rode: ./run.sh na pasta principal"
