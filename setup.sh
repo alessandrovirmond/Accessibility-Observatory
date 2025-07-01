@@ -22,13 +22,10 @@ fi
 
 
 
-if ! python3.12 -m venv --help &> /dev/null; then
-    echo "⏳ Instalando python3.12-venv..."
-    sudo apt update
-    sudo apt install -y python3.12-venv
-else
-    echo "✅ python3.12-venv já instalado."
-fi
+echo "⏳ Instalando python3.12-venv..."
+sudo apt update
+sudo apt install -y python3.12-venv
+
 
 
 
