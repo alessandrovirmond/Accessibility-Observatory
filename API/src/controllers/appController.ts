@@ -466,7 +466,7 @@ async getTop10DomainsByState(req: Request, res: Response) {
   }
 
 
-  
+
 
   async getStates(req: Request, res: Response) {
     console.warn('Requisição para obter todos os estados distintos');
