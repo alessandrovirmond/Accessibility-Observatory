@@ -8,16 +8,23 @@ DB_PASS="observatorio"
 DB_HOST="127.0.0.1"
 SQL_FILE="./API/observatorio.sql"
 
-# Verifica se o mysql está instalado
+# Verifica se o mysql está instalado (cliente)
 if ! command -v mysql &> /dev/null; then
   echo "🔍 Cliente MySQL não encontrado. Instalando..."
   sudo apt update
   sudo apt install -y mysql-client
+fi
 
-  if ! command -v mysql &> /dev/null; then
-    echo "❌ Falha ao instalar o cliente MySQL. Verifique se você tem permissões suficientes."
-    exit 1
-  fi
+# Verifica se o servidor MySQL está instalado
+if ! dpkg -l | grep -q mysql-server; then
+  echo "🧩 Servidor MySQL não encontrado. Instalando..."
+  sudo apt install -y mysql-server
+fi
+
+# Verifica se o serviço do MySQL está ativo
+if ! systemctl is-active --quiet mysql; then
+  echo "🚀 Iniciando serviço MySQL..."
+  sudo systemctl start mysql
 fi
 
 # Verifica se o arquivo SQL existe
