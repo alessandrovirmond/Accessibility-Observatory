@@ -27,15 +27,20 @@ if ! systemctl is-active --quiet mysql; then
   sudo systemctl start mysql
 fi
 
+# Cria o usuário e o banco (caso não existam)
+echo "🔐 Verificando usuário e banco de dados..."
+sudo mysql <<EOF
+CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
+GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
 # Verifica se o arquivo SQL existe
 if [ ! -f "$SQL_FILE" ]; then
   echo "❌ Arquivo SQL não encontrado: $SQL_FILE"
   exit 1
 fi
-
-# Cria o banco (caso não exista)
-echo "📦 Criando banco de dados (se necessário)..."
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
 
 # Executa o script SQL
 echo "📥 Importando dados para o banco..."
