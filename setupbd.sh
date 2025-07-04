@@ -6,7 +6,7 @@ DB_NAME="observatorio"
 DB_USER="observatorio"
 DB_PASS="observatorio"
 DB_HOST="127.0.0.1"
-SQL_FILE="./API/src/observatorio.sql"
+SQL_FILE="./API/observatorio.sql"
 
 # Verifica se o arquivo SQL existe
 if [ ! -f "$SQL_FILE" ]; then
